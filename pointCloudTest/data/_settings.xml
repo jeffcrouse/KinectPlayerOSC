@@ -1,26 +1,34 @@
 <controls>
-    <Toggle_Draw_video>
-        <name>Draw video</name>
-        <value>0</value>
-    </Toggle_Draw_video>
     <SliderInt_Angle>
         <name>Angle</name>
-        <value>-1</value>
+        <value>7</value>
     </SliderInt_Angle>
     <SliderFloat_Near_Clipping>
         <name>Near Clipping</name>
-        <value>0.000000</value>
+        <value>38.000000</value>
     </SliderFloat_Near_Clipping>
     <SliderFloat_Far_Clipping>
         <name>Far Clipping</name>
-        <value>3796.000000</value>
+        <value>2955.000000</value>
     </SliderFloat_Far_Clipping>
-    <SliderFloat_Depth_Multiplier>
-        <name>Depth Multiplier</name>
-        <value>0.810000</value>
-    </SliderFloat_Depth_Multiplier>
-    <SliderInt_Dilate>
-        <name>Dilate</name>
-        <value>1</value>
-    </SliderInt_Dilate>
+    <SliderFloat_Z_range>
+        <name>Z range</name>
+        <value>3000.000000</value>
+    </SliderFloat_Z_range>
+    <SliderFloat_Pixel_Size>
+        <name>Pixel Size</name>
+        <value>27.235001</value>
+    </SliderFloat_Pixel_Size>
+    <SliderFloat_Rotate_X>
+        <name>Rotate X</name>
+        <value>0.900000</value>
+    </SliderFloat_Rotate_X>
+    <SliderFloat_Brightness_Boost>
+        <name>Brightness Boost</name>
+        <value>44.500000</value>
+    </SliderFloat_Brightness_Boost>
+    <Toggle_Circle_Pixel>
+        <name>Circle Pixel</name>
+        <value>0</value>
+    </Toggle_Circle_Pixel>
 </controls>

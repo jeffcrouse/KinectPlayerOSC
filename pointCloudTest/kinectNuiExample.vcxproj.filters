@@ -131,9 +131,6 @@
     <ClInclude Include="..\..\..\addons\ofxKinectNui\src\ofxKinectNui.h">
       <Filter>addons\ofxKinectNui\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ofxBase3DVideo.h">
-      <Filter>addons\ofxKinectNui\src</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\win32\SpinLock.h">
       <Filter>addons\ofxKinectNui\src\win32</Filter>
     </ClInclude>
@@ -269,6 +266,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxMSAInteractiveObject\src\ofxMSAInteractiveObject.h">
       <Filter>addons\ofxMSAInteractiveObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxKinectNui\src\ofxBase3DVideo.h">
+      <Filter>addons\ofxKinectNui\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

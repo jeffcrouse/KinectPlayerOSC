@@ -13,6 +13,8 @@
 #pragma once
 
 #include "ofxKinectNui.h"
+#include "ofxKinectNuiPlayer.h"
+#include "ofxKinectNuiRecorder.h"
 #include "ofMain.h"
 #include "ofxOpenCV.h"
 #include "ofxSimpleGuiToo.h"
@@ -35,18 +37,24 @@ class testApp : public ofBaseApp {
 		void kinectPlugged();
 		void kinectUnplugged();
 
+
+
 		ofxKinectNui kinect;
+		ofxKinectNuiPlayer kinectPlayer;
+		ofxKinectNuiRecorder kinectRecorder;
 		ofxBase3DVideo* kinectSource;
 
-		bool bDrawVideo;
 		bool bPlugged;
 		bool bUnplugged;
-		
+
+		float zRange;
+		float pixelSize;
+		float rotateX;
+		int kinectAngle;
 		float nearClipping;
 		float farClipping;
-		int angle;
-		float depthMultiplier;
-		int dilate;
+		bool bCirclePixel;
+		float brightnessBoost;
 
 		ofImage labelImage;
 		ofxCvGrayscaleImage labelImageCV;
