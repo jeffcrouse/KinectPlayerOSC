@@ -36,6 +36,8 @@ public:
         ofPoint p1 = joints[ bone[0] ];
         ofPoint p2 = joints[ bone[1] ];
         
+		cout << p1 << " to " << p2 << endl;
+
         ofPoint diff = p2 - p1;
         ofPoint center = p1 + (diff * pct);
         

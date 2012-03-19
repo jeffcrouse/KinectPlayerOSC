@@ -14,12 +14,6 @@
 
 #include "ofxKinectNui.h"
 #include "ofMain.h"
-#include "ofxKinectNuiPlayer.h"
-#include "ofxKinectNuiRecorder.h"
-
-// uncomment this to read from two kinects simultaneously
-//#define USE_TWO_KINECTS
-
 
 class testApp : public ofBaseApp {
 	public:
@@ -41,13 +35,13 @@ class testApp : public ofBaseApp {
 		ofxKinectNui kinect;
 		ofxBase3DVideo* kinectSource;
 
-		
-		bool bDrawVideo;
-		bool bDrawSkeleton;
 		bool bPlugged;
 		bool bUnplugged;
-		
+		long t;
 		unsigned short nearClipping;
 		unsigned short farClipping;
-		int angle;s
+		int angle;
+
+		ofRectangle r;
+		ofImage headshot;
 };

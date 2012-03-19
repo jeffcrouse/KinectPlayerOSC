@@ -96,11 +96,15 @@ void testApp::update() {
     ofPoint** skeletons = kinect.getSkeletonPoints();
 	ofPoint* joints = skeletons[0];
 	
-	for(int i=0; i<kinect::nui::SkeletonData::POSITION_COUNT; i++)
+	//for(int i=0; i<kinect::nui::SkeletonFrame::SKELETON_COUNT; i++)
+	for(int j=0; j<kinect::nui::SkeletonData::POSITION_COUNT; j++)
 	{
-		cout << "joint: " << joints[i] << endl;
-		//joints[i].x *= 1024;
-		//joints[i].y *= 768;
+		joints[j].x /= 320;
+		joints[j].x *= 1024;
+		joints[j].y /= 240;
+		joints[j].y *= 768;
+		joints[j].z = 0;
+		//cout << "joint " << j << " = " << joints[j] << endl;
 	}
 	
     for(int i=0; i<particles.size(); i++)
@@ -115,6 +119,7 @@ void testApp::draw() {
 	// Draw video only
 	if(bDrawVideo)
 		kinect.draw(0, 0, 1024, 768);	// draw video images from kinect camera
+	
 	if(bDrawSkeleton)
 		kinect.drawSkeleton(0, 0, 1024, 768);
 

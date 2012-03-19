@@ -16,48 +16,79 @@
 void testApp::setup() {
 	ofSetLogLevel(OF_LOG_VERBOSE);
 
-	kinect.init(true, true, false, true, true, true);
+	kinect.init(true, true, false, false, true, true);
 	kinect.open(true);
 
 	kinect.addKinectListener(this, &testApp::kinectPlugged, &testApp::kinectUnplugged);
 	
-
 	ofSetVerticalSync(true);
 
 	kinectSource = &kinect;
+	kinect.setAngle( 15 );
 	angle = kinect.getCurrentAngle();
 	bPlugged = kinect.isConnected();
 	nearClipping = kinect.getNearClippingDistance();
 	farClipping = kinect.getFarClippingDistance();
-	
-	bDrawVideo = false;
-	bDrawSkeleton = false;
 
 	ofSetFrameRate(60);
+	t = LONG_MAX;
 }
 
 //--------------------------------------------------------------
 void testApp::update() {
 	kinectSource->update();
-	
+
+	if(ofGetElapsedTimeMillis() > t)
+	{
+		ofPoint** skeletons = kinect.getSkeletonPoints();
+
+		for(int i=0; i<kinect::nui::SkeletonFrame::SKELETON_COUNT; i++)
+		{
+			ofPoint top = skeletons[i][NUI_SKELETON_POSITION_HEAD] * 2.0;
+			ofPoint bottom = skeletons[i][NUI_SKELETON_POSITION_SHOULDER_CENTER] * 2.0;
+
+			if(top.x != -2 && bottom.x != -2)
+			{	
+				float size = (bottom.y - top.y);
+				r.x = top.x - size;
+				r.width = size * 2;
+
+				r.y = top.y;
+				r.height = size * 2;
+
+				headshot.setFromPixels( kinect.getVideoPixels() );
+				headshot.crop( r.x, r.y, r.width, r.height);
+				headshot.resize( 200, 200);
+			} 
+			else 
+			{
+				cout << i << ": no skeleton found" << endl;
+			}
+		}
+		t = LONG_MAX;
+	}
 }
 
 //--------------------------------------------------------------
 void testApp::draw() {
 	ofBackground(100, 100, 100);
-	// Draw video only
-	if(bDrawVideo){
-		kinect.draw(0, 0, 1024, 768);	// draw video images from kinect camera
+
+	ofSetColor(255);
+	kinect.draw(0, 0);
+	kinect.drawSkeleton(0, 0);
+
+	ofSetColor(255, 0, 0);
+	ofNoFill();
+	ofRect(r.x, r.y, r.width, r.height);
+
+	ofSetColor(255);
+	headshot.draw(660, 20);
+
+	if(t != LONG_MAX)
+	{
+		ofSetColor(255);
+		ofDrawBitmapString(ofToString(t - ofGetElapsedTimeMillis()), ofGetWidth()-100, 20);
 	}
-
-
-	ofEnableAlphaBlending();
-	kinectPlayer.drawDepth(20, 340, 400, 300);
-	kinectPlayer.drawLabel(20, 340, 400, 300);
-	ofDisableAlphaBlending();
-	kinectPlayer.drawSkeleton(20, 20, 400, 300);
-
-	
 }
 
 
@@ -72,7 +103,10 @@ void testApp::exit() {
 //--------------------------------------------------------------
 void testApp::keyPressed (int key) {
 	switch(key){
-	
+	case ' ':
+		t = ofGetElapsedTimeMillis() + 5000;
+		break;
+
 	case 'o': // open stream
 	case 'O':
 		kinect.open();
@@ -125,8 +159,7 @@ void testApp::keyPressed (int key) {
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y) {
-	mRotationY = (x - 512) / 5;
-	mRotationX = (384 - y) / 5;
+
 }
 
 //--------------------------------------------------------------
@@ -153,48 +186,4 @@ void testApp::kinectPlugged(){
 //--------------------------------------------------------------
 void testApp::kinectUnplugged(){
 	bPlugged = false;
-}
-
-//--------------------------------------------------------------
-void testApp::startRecording(){
-	if(!bRecord){
-		// stop playback if running
-		stopPlayback();
-
-		kinectRecorder.setup(kinect, "recording.dat");
-		bRecord = true;
-	}
-}
-
-//--------------------------------------------------------------
-void testApp::stopRecording(){
-	if(bRecord){
-		kinectRecorder.close();
-		bRecord = false;
-	}
-}
-
-//--------------------------------------------------------------
-void testApp::startPlayback(){
-	if(!bPlayback){
-		stopRecording();
-		kinect.close();
-
-		// set record file and source
-		kinectPlayer.setup("recording.dat");
-		kinectPlayer.loop();
-		kinectPlayer.play();
-		kinectSource = &kinectPlayer;
-		bPlayback = true;
-	}
-}
-
-//--------------------------------------------------------------
-void testApp::stopPlayback(){
-	if(bPlayback){
-		kinectPlayer.close();
-		kinect.open();
-		kinectSource = &kinect;
-		bPlayback = false;
-	}
 }
