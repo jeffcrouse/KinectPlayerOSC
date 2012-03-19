@@ -1,0 +1,10 @@
+<controls>
+    <Toggle_Draw_Video>
+        <name>Draw Video</name>
+        <value>0</value>
+    </Toggle_Draw_Video>
+    <Toggle_Draw_Skeleton>
+        <name>Draw Skeleton</name>
+        <value>1</value>
+    </Toggle_Draw_Skeleton>
+</controls>

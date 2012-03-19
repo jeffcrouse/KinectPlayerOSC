@@ -141,9 +141,6 @@ void testApp::exit() {
 	kinect.close();
 
 	kinect.removeKinectListener(this);
-
-	kinectPlayer.close();
-	kinectRecorder.close();
 }
 
 //--------------------------------------------------------------

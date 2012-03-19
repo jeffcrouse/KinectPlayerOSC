@@ -14,9 +14,41 @@
 
 #include "ofxKinectNui.h"
 #include "ofMain.h"
-#include "ofxOpenCV.h"
 #include "ofxSimpleGuiToo.h"
 
+
+class Particle : public ofNode {
+public:
+    int bone[2];
+    float pct;
+    float inc;
+    float angle;
+    float orbitRadius;
+
+    Particle() {
+        angle = ofRandom(0, 360);
+        inc = ofRandom(-3, 3);
+        setOrientation(ofVec3f(ofRandom(0, 360), ofRandom(0, 360), ofRandom(0, 360)));
+    }
+    
+    void update(ofPoint* joints)
+    {
+        ofPoint p1 = joints[ bone[0] ];
+        ofPoint p2 = joints[ bone[1] ];
+        
+        ofPoint diff = p2 - p1;
+        ofPoint center = p1 + (diff * pct);
+        
+        setPosition(center);
+        lookAt(p2);
+        tilt(90);
+        pan(angle);
+        dolly(orbitRadius);
+        
+        angle += inc;
+    }
+    
+};
 
 class testApp : public ofBaseApp {
 	public:
@@ -25,6 +57,7 @@ class testApp : public ofBaseApp {
 		void update();
 		void draw();
 		void exit();
+
 
 		void keyPressed  (int key);
 		void mouseMoved(int x, int y );
@@ -35,23 +68,17 @@ class testApp : public ofBaseApp {
 		void kinectPlugged();
 		void kinectUnplugged();
 
-
-
 		ofxKinectNui kinect;
 		ofxBase3DVideo* kinectSource;
 
 		bool bPlugged;
 		bool bUnplugged;
+		bool bDrawVideo;
+		bool bDrawSkeleton;
 
-		float zRange;
-		float pixelSize;
-		float rotateX;
-		int kinectAngle;
-		float nearClipping;
-		float farClipping;
-		bool bCirclePixel;
-		float brightnessBoost;
+		unsigned short nearClipping;
+		unsigned short farClipping;
+		int angle;
 
-		ofImage labelImage;
-		ofxCvGrayscaleImage labelImageCV;
+		vector<Particle> particles;
 };
