@@ -22,7 +22,7 @@ void testApp::setup() {
 
 	kinect.addKinectListener(this, &testApp::kinectPlugged, &testApp::kinectUnplugged);
 	
-	ofSetVerticalSync(true);
+	//ofSetVerticalSync(true);
 
 	kinectSource = &kinect;
 	angle = kinect.getCurrentAngle();
@@ -65,20 +65,28 @@ void testApp::setup() {
         {NUI_SKELETON_POSITION_ANKLE_RIGHT, NUI_SKELETON_POSITION_FOOT_RIGHT, 10, 10}
     };
     
-    for(int i=0; i<17; i++)
-    {
-        int numParticles = bones[i][2]*2;
-        for(int j=0; j<numParticles; j++)
-        {
-            Particle p;
-            p.bone[0] = bones[i][0];
-            p.bone[1] = bones[i][1];
-            p.orbitRadius = bones[i][3];
-            p.pct = j / (float)numParticles;
+	for(int i=0; i<kinect::nui::SkeletonFrame::SKELETON_COUNT; i++)
+	{
+		for(int j=0; j<17; j++)
+		{
+			int numParticles = bones[j][2];
+
+			for(int n=0; n<numParticles; n++)
+			{
+				Particle p;
+				p.skeleton = i;
+				p.jointIndex1 = bones[j][0];
+				p.jointIndex2 = bones[j][1];
+				p.orbitRadius = bones[j][3];
+				p.pct = j / (float)numParticles;
             
-            particles.push_back( p );
-        }
-    }
+				particles.push_back( p );
+			}
+		}
+	}
+
+	cout << "created " << particles.size() << " particles" << endl;
+
 
 	gui.addToggle("Draw Video", bDrawVideo);
 	gui.addToggle("Draw Skeleton", bDrawSkeleton);
@@ -92,36 +100,23 @@ void testApp::setup() {
 //--------------------------------------------------------------
 void testApp::update() {
 	kinectSource->update();
-    
-    ofPoint** skeletons = kinect.getSkeletonPoints();
-	ofPoint* joints = skeletons[0];
-	
-	//for(int i=0; i<kinect::nui::SkeletonFrame::SKELETON_COUNT; i++)
-	for(int j=0; j<kinect::nui::SkeletonData::POSITION_COUNT; j++)
-	{
-		joints[j].x /= 320;
-		joints[j].x *= 1024;
-		joints[j].y /= 240;
-		joints[j].y *= 768;
-		joints[j].z = 0;
-		//cout << "joint " << j << " = " << joints[j] << endl;
-	}
-	
+    	
     for(int i=0; i<particles.size(); i++)
     {
-        particles[i].update( joints );
+        particles[i].update( kinect.getSkeletonPoints() );
     }
 }
 
 //--------------------------------------------------------------
 void testApp::draw() {
+
 	ofBackground(100, 100, 100);
 	// Draw video only
 	if(bDrawVideo)
-		kinect.draw(0, 0, 1024, 768);	// draw video images from kinect camera
+		kinect.draw(0, 0);	// draw video images from kinect camera
 	
 	if(bDrawSkeleton)
-		kinect.drawSkeleton(0, 0, 1024, 768);
+		kinect.drawSkeleton(0, 0);
 
 	glEnable( GL_DEPTH );
 	ofEnableAlphaBlending();

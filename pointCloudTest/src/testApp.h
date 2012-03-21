@@ -35,8 +35,6 @@ class testApp : public ofBaseApp {
 		void kinectPlugged();
 		void kinectUnplugged();
 
-
-
 		ofxKinectNui kinect;
 		ofxBase3DVideo* kinectSource;
 
@@ -50,7 +48,8 @@ class testApp : public ofBaseApp {
 		float nearClipping;
 		float farClipping;
 		bool bCirclePixel;
-		float brightnessBoost;
+		bool bPulsatePixels;
+		float pctFilled;
 
 		ofImage labelImage;
 		ofxCvGrayscaleImage labelImageCV;

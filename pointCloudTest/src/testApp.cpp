@@ -29,8 +29,9 @@ void testApp::setup() {
 	nearClipping = kinect.getNearClippingDistance();
 	farClipping = kinect.getFarClippingDistance();
 
-	brightnessBoost = 0;
+	pctFilled = 0;
 	bCirclePixel = true;
+	bPulsatePixels = false;
 
 	labelImageCV.allocate( kinect.getDepthResolutionWidth(), kinect.getDepthResolutionHeight() );
 
@@ -38,11 +39,12 @@ void testApp::setup() {
 	gui.addSlider("Angle", kinectAngle, -27, 27); 
 	gui.addSlider("Near Clipping", nearClipping, 0, 200);
 	gui.addSlider("Far Clipping", farClipping, 200, 4000);
-	gui.addSlider("Z range", zRange, 0, 3000);
+	gui.addSlider("Z range", zRange, 0, 6000);
 	gui.addSlider("Pixel Size", pixelSize, 3, 40);
 	gui.addSlider("Rotate X", rotateX, -90, 90);
-	gui.addSlider("Brightness Boost", brightnessBoost, 0, 100);
 	gui.addToggle("Circle Pixel", bCirclePixel);
+	gui.addToggle("Pulsate Pixels", bPulsatePixels);
+	gui.addSlider("Player Fill", pctFilled, 0, 1);
 
 	gui.addTitle("Previews").setNewColumn(true);
 	gui.addContent("Video", kinect.getVideoTextureReference());
@@ -57,6 +59,15 @@ void testApp::setup() {
 //--------------------------------------------------------------
 void testApp::update() {
 	kinect.update();
+
+	if(bPulsatePixels)
+	{
+		pixelSize = 20 + cos(ofGetFrameNum() / 5.0) * 5;
+	}
+
+	pctFilled += .003;
+	if(pctFilled > 1)
+		pctFilled = 0;
 
 	// Update the kinect values
 	if(kinectAngle != kinect.getCurrentAngle()) {
@@ -105,9 +116,22 @@ void testApp::draw() {
 
 				ofPushMatrix();
 				ofTranslate(px, py, pz);
+				
 				ofColor color = kinect.getCalibratedColorAt(x, y);
-				color.setBrightness( color.getBrightness() + brightnessBoost );
+
+				float pct = 1 - ( y / (float)kinect.getDepthResolutionHeight() );
+				if( pct > pctFilled )
+					color.setSaturation(0);
+				else {
+					int i = kinect.getPlayerIndexAt(x, y);
+					if(i % 2 == 0)
+						color.g = min(color.g+100, 255);
+					else
+						color.r = min(color.r+100, 255);
+				}
+
 				ofSetColor(color);
+
 				if(bCirclePixel)
 					ofCircle(0, 0, pixelSize);
 				else

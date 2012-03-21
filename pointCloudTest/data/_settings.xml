@@ -1,34 +1,38 @@
 <controls>
     <SliderInt_Angle>
         <name>Angle</name>
-        <value>4</value>
+        <value>0</value>
     </SliderInt_Angle>
     <SliderFloat_Near_Clipping>
         <name>Near Clipping</name>
-        <value>23.000000</value>
+        <value>99.000000</value>
     </SliderFloat_Near_Clipping>
     <SliderFloat_Far_Clipping>
         <name>Far Clipping</name>
-        <value>2727.000000</value>
+        <value>3563.000000</value>
     </SliderFloat_Far_Clipping>
     <SliderFloat_Z_range>
         <name>Z range</name>
-        <value>3000.000000</value>
+        <value>2160.000000</value>
     </SliderFloat_Z_range>
     <SliderFloat_Pixel_Size>
         <name>Pixel Size</name>
-        <value>10.400000</value>
+        <value>17.261101</value>
     </SliderFloat_Pixel_Size>
     <SliderFloat_Rotate_X>
         <name>Rotate X</name>
         <value>-11.700000</value>
     </SliderFloat_Rotate_X>
-    <SliderFloat_Brightness_Boost>
-        <name>Brightness Boost</name>
-        <value>19.000000</value>
-    </SliderFloat_Brightness_Boost>
     <Toggle_Circle_Pixel>
         <name>Circle Pixel</name>
         <value>0</value>
     </Toggle_Circle_Pixel>
+    <Toggle_Pulsate_Pixels>
+        <name>Pulsate Pixels</name>
+        <value>1</value>
+    </Toggle_Pulsate_Pixels>
+    <SliderFloat_Player_Fill>
+        <name>Player Fill</name>
+        <value>0.801002</value>
+    </SliderFloat_Player_Fill>
 </controls>

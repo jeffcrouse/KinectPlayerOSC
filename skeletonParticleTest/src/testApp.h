@@ -19,7 +19,9 @@
 
 class Particle : public ofNode {
 public:
-    int bone[2];
+	int skeleton;
+    int jointIndex1;
+	int jointIndex2;
     float pct;
     float inc;
     float angle;
@@ -31,21 +33,23 @@ public:
         setOrientation(ofVec3f(ofRandom(0, 360), ofRandom(0, 360), ofRandom(0, 360)));
     }
     
-    void update(ofPoint* joints)
+    void update(ofPoint** skeletons)
     {
-        ofPoint p1 = joints[ bone[0] ];
-        ofPoint p2 = joints[ bone[1] ];
+        ofPoint p1 = skeletons[skeleton][ jointIndex1 ];
+        ofPoint p2 = skeletons[skeleton][ jointIndex2 ];
         
-		cout << p1 << " to " << p2 << endl;
-
         ofPoint diff = p2 - p1;
         ofPoint center = p1 + (diff * pct);
-        
+        center.z = 0;
+		center *= 2;
+		//if(center.x != -1)
+			//cout << "center= " << center << endl;
+
         setPosition(center);
-        lookAt(p2);
-        tilt(90);
-        pan(angle);
-        dolly(orbitRadius);
+        //lookAt(p2);
+        //tilt(90);
+        //pan(angle);
+        //dolly(orbitRadius);
         
         angle += inc;
     }
