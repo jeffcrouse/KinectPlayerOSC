@@ -117,6 +117,18 @@
     <ClCompile Include="..\..\..\addons\ofxMSAInteractiveObject\src\ofxMSAInteractiveObject.cpp">
       <Filter>addons\ofxMSAInteractiveObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.cpp">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.cpp">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscSender.cpp">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\addons\ofxKinectNui\src\win32\Event.h">
@@ -270,25 +282,28 @@
     <ClInclude Include="..\..\..\addons\ofxKinectNui\src\ofxBase3DVideo.h">
       <Filter>addons\ofxKinectNui\src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOsc.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscArg.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscSender.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="addons">
       <UniqueIdentifier>{d79abca0-5b91-4000-9e03-3b535f96d5b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxKinectNui">
-      <UniqueIdentifier>{41a2b0ca-3ef8-475b-97c2-628cf256ce13}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxKinectNui\src">
-      <UniqueIdentifier>{809c12a3-2279-4bd9-bbb6-c3240fd0cb4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxKinectNui\src\win32">
-      <UniqueIdentifier>{d3504b56-a649-48f7-8400-d3dd631439f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxKinectNui\src\kinect">
-      <UniqueIdentifier>{d681c037-e330-4a88-89db-dad31d77dfe6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxKinectNui\src\kinect\nui">
-      <UniqueIdentifier>{ebd74895-655a-46f0-a210-57d210bcaef0}</UniqueIdentifier>
     </Filter>
     <Filter Include="addons\ofxOpenCV">
       <UniqueIdentifier>{de02525e-150d-4229-a72e-dcc239b4b719}</UniqueIdentifier>
@@ -313,6 +328,30 @@
     </Filter>
     <Filter Include="addons\ofxMSAInteractiveObject">
       <UniqueIdentifier>{3cf07e91-1992-4f09-a11b-3b8561cadda2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOSC">
+      <UniqueIdentifier>{fa5bcb1b-20ae-4d41-b657-f8b50e13f87b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOSC\src">
+      <UniqueIdentifier>{c1184bbe-ee44-41b5-b3c4-2827f0da6538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOSC\lib">
+      <UniqueIdentifier>{ac1d1783-9524-4a31-bf3c-f8e65599c696}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxKinectNui">
+      <UniqueIdentifier>{41a2b0ca-3ef8-475b-97c2-628cf256ce13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxKinectNui\src">
+      <UniqueIdentifier>{809c12a3-2279-4bd9-bbb6-c3240fd0cb4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxKinectNui\src\win32">
+      <UniqueIdentifier>{d3504b56-a649-48f7-8400-d3dd631439f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxKinectNui\src\kinect">
+      <UniqueIdentifier>{d681c037-e330-4a88-89db-dad31d77dfe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxKinectNui\src\kinect\nui">
+      <UniqueIdentifier>{ebd74895-655a-46f0-a210-57d210bcaef0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -411,6 +450,12 @@
     </Library>
     <Library Include="..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs2010\opencv_lapack.lib">
       <Filter>addons\ofxOpenCV\libs</Filter>
+    </Library>
+    <Library Include="..\..\..\addons\ofxOsc\libs\oscpack\lib\vs2010\oscpack.lib">
+      <Filter>addons\ofxOSC\lib</Filter>
+    </Library>
+    <Library Include="..\..\..\addons\ofxOsc\libs\oscpack\lib\vs2010\oscpackd.lib">
+      <Filter>addons\ofxOSC\lib</Filter>
     </Library>
   </ItemGroup>
 </Project>

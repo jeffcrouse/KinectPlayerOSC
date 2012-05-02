@@ -16,8 +16,9 @@
 #include "ofMain.h"
 #include "ofxOpenCV.h"
 #include "ofxSimpleGuiToo.h"
-#include "ofxKinectNuiPlayer.h"
-#include "ofxKinectNuiRecorder.h"
+#include "ofxOsc.h"
+#include "Winsock2.h"
+
 
 class testApp : public ofBaseApp {
 	public:
@@ -36,25 +37,24 @@ class testApp : public ofBaseApp {
 		void kinectPlugged();
 		void kinectUnplugged();
 
-		void startPlayback();
-		void stopPlayback();
-		void openPlaybackFile();
-
 		ofxKinectNui kinect;
-		ofxKinectNuiPlayer kinectPlayer;
 		ofxBase3DVideo* kinectSource;
+		ofxOscSender sender;
 
-		bool bPlayback;
 		bool bPlugged;
 		bool bUnplugged;
-		
-		int nearClipping;
-		int farClipping;
 
-		string playbackFile;
-		float zRange;
+		ofPoint renderPos;
 		float pixelSize;
-		float rotateX;
+		float pixelSpacing;
 		int kinectAngle;
-		bool bCirclePixel;
+		float nearClipping;
+		float farClipping;
+		bool bModulateBrightness;
+		bool bModulatePixelSize;
+		float pctFilled;
+		ofPoint videoOffset;
+		ofFbo render;
+		bool bDragging;
+
 };
