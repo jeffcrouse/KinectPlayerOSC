@@ -91,7 +91,7 @@ void testApp::update() {
 
 //--------------------------------------------------------------
 void testApp::draw() {
-	ofBackground(255);
+	ofBackground(0);
 
 	ofSetColor(255,255,255);
 	

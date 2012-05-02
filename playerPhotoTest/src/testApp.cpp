@@ -24,7 +24,7 @@ void testApp::setup() {
 	ofSetVerticalSync(true);
 
 	kinectSource = &kinect;
-	kinect.setAngle( 15 );
+	kinect.setAngle( 0 );
 	angle = kinect.getCurrentAngle();
 	bPlugged = kinect.isConnected();
 	nearClipping = kinect.getNearClippingDistance();
