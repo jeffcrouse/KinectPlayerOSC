@@ -17,7 +17,7 @@
 #include "ofxOpenCV.h"
 #include "ofxSimpleGuiToo.h"
 #include "ofxOsc.h"
-#include "Winsock2.h"
+//#include "Winsock2.h"
 
 
 class testApp : public ofBaseApp {
@@ -46,15 +46,22 @@ class testApp : public ofBaseApp {
 
 		ofPoint renderPos;
 		float pixelSize;
-		float pixelSpacing;
+		int pixelSpacing;
 		int kinectAngle;
 		float nearClipping;
 		float farClipping;
-		bool bModulateBrightness;
+		float brightness, contrast;
 		bool bModulatePixelSize;
 		float pctFilled;
 		ofPoint videoOffset;
 		ofFbo render;
 		bool bDragging;
+
+		//ofImage rgbaLabelImage;
+		//ofxCvColorImage labelImage;
+
+		ofxCvColorImage colorFrame;
+		ofxCvGrayscaleImage grayFrame;
+		ofPixels grayPixels;
 
 };

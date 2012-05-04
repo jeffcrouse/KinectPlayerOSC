@@ -13,32 +13,36 @@
     </SliderFloat_Far_Clipping>
     <SliderFloat_Pixel_Size>
         <name>Pixel Size</name>
-        <value>3.000000</value>
+        <value>4.225000</value>
     </SliderFloat_Pixel_Size>
-    <SliderFloat_Pixel_Spacing>
+    <SliderInt_Pixel_Spacing>
         <name>Pixel Spacing</name>
-        <value>1.135000</value>
-    </SliderFloat_Pixel_Spacing>
+        <value>1</value>
+    </SliderInt_Pixel_Spacing>
     <SliderFloat_Player_Fill>
         <name>Player Fill</name>
-        <value>1.000000</value>
+        <value>0.095000</value>
     </SliderFloat_Player_Fill>
-    <Toggle_Modulate_Brightness>
-        <name>Modulate Brightness</name>
-        <value>0</value>
-    </Toggle_Modulate_Brightness>
+    <SliderFloat_Brightness>
+        <name>Brightness</name>
+        <value>0.270000</value>
+    </SliderFloat_Brightness>
+    <SliderFloat_Contrast>
+        <name>Contrast</name>
+        <value>0.530000</value>
+    </SliderFloat_Contrast>
     <Toggle_Modulate_Size>
         <name>Modulate Size</name>
         <value>1</value>
     </Toggle_Modulate_Size>
     <Slider2D_Video_Offset>
         <name>Video Offset</name>
-        <valueX>3.913043</valueX>
-        <valueY>-7.608696</valueY>
+        <valueX>-2.173913</valueX>
+        <valueY>1.304348</valueY>
     </Slider2D_Video_Offset>
-    <Slider2D_Render_Position>
-        <name>Render Position</name>
-        <valueX>768.000000</valueX>
-        <valueY>381.217377</valueY>
-    </Slider2D_Render_Position>
+    <Slider2D_Render_Pos>
+        <name>Render Pos</name>
+        <valueX>612.173889</valueX>
+        <valueY>275.478271</valueY>
+    </Slider2D_Render_Pos>
 </controls>
