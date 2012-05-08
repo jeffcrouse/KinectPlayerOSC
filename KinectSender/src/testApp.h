@@ -19,6 +19,8 @@
 #include "ofxOsc.h"
 //#include "Winsock2.h"
 
+#define DEST_WIDTH 256
+#define DEST_HEIGHT 256
 
 class testApp : public ofBaseApp {
 	public:
@@ -52,16 +54,10 @@ class testApp : public ofBaseApp {
 		float farClipping;
 		float brightness, contrast;
 		bool bModulatePixelSize;
-		float pctFilled;
-		ofPoint videoOffset;
 		ofFbo render;
-		bool bDragging;
-
-		//ofImage rgbaLabelImage;
-		//ofxCvColorImage labelImage;
+		ofPoint videoOffset;
 
 		ofxCvColorImage colorFrame;
 		ofxCvGrayscaleImage grayFrame;
 		ofPixels grayPixels;
-
 };

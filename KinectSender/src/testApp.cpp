@@ -3,17 +3,16 @@
 //--------------------------------------------------------------
 void testApp::setup() {
 	ofSetLogLevel(OF_LOG_VERBOSE);
+	ofSetVerticalSync(false);
 
-	/*
+
 	char szPath[128] = "";
     gethostname(szPath, sizeof(szPath));
 	string hostname = string(szPath);
 	string destination="localhost";
-	int port = 10001;
-
+	int port = 12345;
 	cout <<  hostname << " --> " << destination << ":" << port << endl;
 	sender.setup( destination, port );
-	*/
 
 	bool grabVideo = true;
 	bool grabDepth = true;
@@ -30,16 +29,6 @@ void testApp::setup() {
 	kinect.init(grabVideo, grabDepth, grabAudio, grabLabel, grabSkeleton, grabCalibratedVideo, grabLabelCv, useTexture, videoResolution, depthResolution);
 	kinect.open(nearmode);
 	kinect.addKinectListener(this, &testApp::kinectPlugged, &testApp::kinectUnplugged);
-
-	render.allocate(256, 256);
-
-	ofSetVerticalSync(false);
-
-	//rgbaLabelImage.allocate(320, 240, OF_IMAGE_COLOR_ALPHA);
-	//labelImage.allocate(320, 240);
-	colorFrame.allocate(320, 240);
-	grayFrame.allocate(320, 240);
-
 	kinectSource = &kinect;
 	kinectAngle = kinect.getCurrentAngle();
 	bPlugged = kinect.isConnected();
@@ -47,7 +36,7 @@ void testApp::setup() {
 	//nearClipping = kinect.getNearClippingDistance();
 	//farClipping = kinect.getFarClippingDistance();
 	renderPos.set(400, 110);
-	pctFilled = 0;
+
 
 	gui.addTitle("All Controls");
 	gui.addSlider("Angle", kinectAngle, -27, 27); 
@@ -60,11 +49,9 @@ void testApp::setup() {
 	gui.addSlider("Contrast", contrast, -1, 1);
 	gui.addToggle("Modulate Size", bModulatePixelSize);
 	
-	gui.addTitle("Positions").setNewColumn(true);
-	gui.addSlider2d("Video Offset", videoOffset, -20, 20, -20, 20);
-	gui.addSlider2d("Render Pos", renderPos, 0, ofGetWidth(), 0, ofGetHeight());
 
-	//gui.addTitle("Previews").setNewColumn(true);
+	gui.addTitle("Previews").setNewColumn(true);
+	gui.addContent(render.getTextureReference());
 	//gui.addContent("Video", kinect.getVideoTextureReference());
 	//gui.addContent("Gray", grayFrame.getTextureReference());
 
@@ -87,17 +74,12 @@ void testApp::update() {
 		grayPixels = grayFrame.getPixelsRef();
 	}
 
-	//rgbaLabelImage.setFromPixels( kinect.getLabelPixels() );
-	//rgbaLabelImage.setImageType( OF_IMAGE_COLOR );
-	//labelImage.setFromPixels( rgbaLabelImage.getPixels(), 320, 240 );
-
-
 	// Update the kinect values
 	if(kinectAngle != kinect.getCurrentAngle()) {
 		kinect.setAngle( kinectAngle );
 	}
 
-		/*
+	/*
 	if(nearClipping != kinect.getNearClippingDistance()) {
 		kinect.setNearClippingDistance( nearClipping );
 	}
@@ -105,7 +87,6 @@ void testApp::update() {
 		kinect.setFarClippingDistance( farClipping );
 	}
 	*/
-
 }
 
 //--------------------------------------------------------------
@@ -116,34 +97,43 @@ void testApp::draw() {
 	render.begin();
 	ofClear(0);
 	ofFill(); 
-	ofColor color;
+	
+	ofxOscMessage m;
+	m.setAddress( "/player" );
 
-	for(int y=0; y<render.getHeight(); y+=pixelSize+pixelSpacing)
+	for(int y=0; y<DEST_HEIGHT; y+=pixelSize+pixelSpacing)
 	{
-		for(int x=0; x<render.getWidth(); x+=pixelSize+pixelSpacing)
+		for(int x=0; x<DEST_WIDTH; x+=pixelSize+pixelSpacing)
 		{
 			// calculate where in the kinect stuff we should sample
-			float px = ofMap(x, 0, render.getWidth(), 0,  kinect.getDepthResolutionWidth());
-			float py = ofMap(y, 0, render.getHeight(), 0,  kinect.getDepthResolutionHeight());
+			ofPoint samplePos;
+			samplePos.x = ofMap(x, 0, DEST_WIDTH, 0,  kinect.getDepthResolutionWidth());
+			samplePos.y = ofMap(y, 0, DEST_HEIGHT, 0,  kinect.getDepthResolutionHeight());
 
-			int depth =  kinect.getDistanceAt(px, py);
-			if( kinect.getLabelPixels().getColor(px, py).a > 0 && ofInRange(depth, nearClipping, farClipping) )
+			// Get depth and alpha values (for testing whether we want this pixel)
+			int depth =  kinect.getDistanceAt(samplePos);
+			int a =  kinect.getLabelPixels().getColor(samplePos.x, samplePos.y).a;
+
+			// If it passes the tests, draw/send it
+			if(a > 0 && ofInRange(depth, nearClipping, farClipping) )
 			{
-				ofPoint sampleAt = ofPoint(px, py) + videoOffset;
-				sampleAt.x = ofClamp(sampleAt.x, 0, grayPixels.getWidth());
-				sampleAt.y = ofClamp(sampleAt.y, 0,  grayPixels.getHeight());
-
-				color = grayPixels.getColor(sampleAt.x, sampleAt.y);
+				// Get the color from the sample position
+				samplePos+=videoOffset;
+				samplePos.x = ofClamp(samplePos.x, 0, grayPixels.getWidth());
+				samplePos.y = ofClamp(samplePos.y, 0,  grayPixels.getHeight());
+				ofColor color = grayPixels.getColor(samplePos.x, samplePos.y);
 
 				// Calculate size of pixel
 				float size = bModulatePixelSize 
 					?  ofMap(depth, nearClipping, farClipping, pixelSize, 2, true)
 					: pixelSize;
 				
-				float pct = 1 - ( y / (float)kinect.getDepthResolutionHeight() );
-				if( pct < pctFilled )
-					color.g = min(color.g+100, 255);
-		
+				// Add this pixel to the message
+				m.addFloatArg( x );
+				m.addFloatArg( y );
+				m.addFloatArg( color.getBrightness() );
+
+				// Draw the pixel into the FBO
 				ofPushMatrix();
 				ofTranslate(x, y, 0);
 				ofSetColor(color);
@@ -151,60 +141,11 @@ void testApp::draw() {
 				numPixels++;
 				ofPopMatrix();
 			}
-
 		}
 	}
-	/*
-	for(float y=0; y < kinect.getDepthResolutionHeight(); y+=pixelSpacing)
-	{
-		for(float x=0; x < kinect.getDepthResolutionWidth(); x+=pixelSpacing)
-		{
-			ofColor label =  kinect.getLabelPixels().getColor(x, y);
-			int depth =  kinect.getDistanceAt(x, y);
-			if(label.a > 0 && ofInRange(depth, nearClipping, farClipping) )
-			{
-				ofPoint sampleAt = ofPoint(x, y) + videoOffset;
-				sampleAt.x = ofClamp(sampleAt.x, 0, kinect.getVideoResolutionWidth());
-				sampleAt.y = ofClamp(sampleAt.y, 0, kinect.getVideoResolutionHeight());
-	
-				//ofColor color = kinect.getCalibratedColorAt(sampleAt);
-				color = grayPixels.getColor(sampleAt.x, sampleAt.y);
-
-				// Calculate size of pixel
-				float size = bModulatePixelSize 
-					?  ofMap(depth, nearClipping, farClipping, pixelSize, 2, true)
-					: pixelSize;
-
-				float pct = 1 - ( y / (float)kinect.getDepthResolutionHeight() );
-				if( pct < pctFilled )
-					color.g = min(color.g+100, 255);
-		
-
-				float px = ofMap(x, 0, kinect.getDepthResolutionWidth(), 0, render.getWidth());
-				float py = ofMap(y, 0, kinect.getDepthResolutionHeight(), 0, render.getHeight());
-
-				ofPushMatrix();
-				ofTranslate(px, py, 0);
-				ofSetColor(color);
-				ofRect(0, 0, size, size);
-				numPixels++;
-				ofPopMatrix();
-			}
-		}
-	}
-	*/
+	sender.sendMessage( m );
 	render.end();
 	
-
-
-	ofPushMatrix();
-	ofTranslate(renderPos);
-	ofNoFill();
-	ofSetColor(255);
-	ofRect(-1, -1, render.getWidth()+2, render.getHeight()+2);
-	ofSetColor(255,255,255);
-	render.draw(0, 0);
-	ofPopMatrix();
 		
 
 
@@ -213,11 +154,7 @@ void testApp::draw() {
 	ofDrawBitmapString(report.str(), 10, ofGetHeight()-20);
 
 	grayFrame.draw(0, 0);
-	//labelImage.draw(320, 0);
-
 	gui.draw();
-
-
 }
 
 
