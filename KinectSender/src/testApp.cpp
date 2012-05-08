@@ -9,7 +9,7 @@ void testApp::setup() {
 	char szPath[128] = "";
     gethostname(szPath, sizeof(szPath));
 	string hostname = string(szPath);
-	string destination="localhost";
+	string destination="192.168.2.255";
 	int port = 12345;
 	cout <<  hostname << " --> " << destination << ":" << port << endl;
 	sender.setup( destination, port );
@@ -32,11 +32,13 @@ void testApp::setup() {
 	kinectSource = &kinect;
 	kinectAngle = kinect.getCurrentAngle();
 	bPlugged = kinect.isConnected();
-	bDragging = false;
 	//nearClipping = kinect.getNearClippingDistance();
 	//farClipping = kinect.getFarClippingDistance();
 	renderPos.set(400, 110);
 
+	render.allocate(DEST_WIDTH, DEST_HEIGHT);
+	colorFrame.allocate(320, 240);
+	grayFrame.allocate(320, 240);
 
 	gui.addTitle("All Controls");
 	gui.addSlider("Angle", kinectAngle, -27, 27); 
@@ -44,16 +46,16 @@ void testApp::setup() {
 	gui.addSlider("Far Clipping", farClipping, 2000, 4000);
 	gui.addSlider("Pixel Size", pixelSize, 2, 10);
 	gui.addSlider("Pixel Spacing", pixelSpacing, 0, 10);
-	gui.addSlider("Player Fill", pctFilled, 0, 1);
 	gui.addSlider("Brightness", brightness, -1, 1);
 	gui.addSlider("Contrast", contrast, -1, 1);
 	gui.addToggle("Modulate Size", bModulatePixelSize);
 	
 
 	gui.addTitle("Previews").setNewColumn(true);
-	gui.addContent(render.getTextureReference());
-	//gui.addContent("Video", kinect.getVideoTextureReference());
-	//gui.addContent("Gray", grayFrame.getTextureReference());
+	gui.addContent("Video", kinect.getVideoTextureReference(), 320);
+	gui.addContent("Gray", grayFrame.getTextureReference(), 320);
+	gui.addContent("Render", render.getTextureReference(), DEST_WIDTH).setNewColumn(true);
+
 
 	ofSetFrameRate(60);
 
@@ -99,16 +101,18 @@ void testApp::draw() {
 	ofFill(); 
 	
 	ofxOscMessage m;
-	m.setAddress( "/player" );
+	m.setAddress( "/p1" );
 
-	for(int y=0; y<DEST_HEIGHT; y+=pixelSize+pixelSpacing)
+	for(int y=0; y<render.getHeight(); y+=pixelSize+pixelSpacing)
 	{
-		for(int x=0; x<DEST_WIDTH; x+=pixelSize+pixelSpacing)
+		for(int x=0; x<render.getWidth(); x+=pixelSize+pixelSpacing)
 		{
+			if(x >= DEST_WIDTH || y >= DEST_HEIGHT || m.getNumArgs() > 810) continue;
+
 			// calculate where in the kinect stuff we should sample
 			ofPoint samplePos;
-			samplePos.x = ofMap(x, 0, DEST_WIDTH, 0,  kinect.getDepthResolutionWidth());
-			samplePos.y = ofMap(y, 0, DEST_HEIGHT, 0,  kinect.getDepthResolutionHeight());
+			samplePos.x = ofMap(x, 0, render.getWidth(), 0,  kinect.getDepthResolutionWidth());
+			samplePos.y = ofMap(y, 0, render.getHeight(), 0,  kinect.getDepthResolutionHeight());
 
 			// Get depth and alpha values (for testing whether we want this pixel)
 			int depth =  kinect.getDistanceAt(samplePos);
@@ -129,9 +133,9 @@ void testApp::draw() {
 					: pixelSize;
 				
 				// Add this pixel to the message
-				m.addFloatArg( x );
-				m.addFloatArg( y );
-				m.addFloatArg( color.getBrightness() );
+				m.addIntArg( x );
+				m.addIntArg( y );
+				m.addIntArg( color.getBrightness() );
 
 				// Draw the pixel into the FBO
 				ofPushMatrix();
@@ -143,17 +147,24 @@ void testApp::draw() {
 			}
 		}
 	}
+	/*
+	cout << "sending message: " << m.getAddress() << ": ";
+	for(int i=0; i<m.getNumArgs(); i++) {
+		cout << m.getArgAsFloat(i) << ", ";
+	}
+	cout << endl;
+	*/
+	sender.sendMessage( m );
+	m.setAddress("/p2");
 	sender.sendMessage( m );
 	render.end();
 	
-		
 
-
+	ofSetColor(255);
 	stringstream report;
 	report << "total pixels: " << numPixels << endl;
 	ofDrawBitmapString(report.str(), 10, ofGetHeight()-20);
 
-	grayFrame.draw(0, 0);
 	gui.draw();
 }
 
@@ -207,23 +218,18 @@ void testApp::mouseMoved(int x, int y) {
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-	if(bDragging) {
-		
-	}
+
 }
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
 
-	if(x > renderPos.x && x < renderPos.x+render.getWidth() 
-		&& y > renderPos.y && y < renderPos.y+render.getHeight()) {
-		bDragging = true;
-	}
+
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-	bDragging = false;
+
 }
 
 //--------------------------------------------------------------
