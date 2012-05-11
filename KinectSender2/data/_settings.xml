@@ -1,0 +1,34 @@
+<controls>
+    <SliderInt_Angle>
+        <name>Angle</name>
+        <value>8</value>
+    </SliderInt_Angle>
+    <SliderFloat_Near_Clipping>
+        <name>Near Clipping</name>
+        <value>844.000000</value>
+    </SliderFloat_Near_Clipping>
+    <SliderFloat_Far_Clipping>
+        <name>Far Clipping</name>
+        <value>4000.000000</value>
+    </SliderFloat_Far_Clipping>
+    <SliderFloat_Pixel_Size>
+        <name>Pixel Size</name>
+        <value>5.680000</value>
+    </SliderFloat_Pixel_Size>
+    <SliderInt_Pixel_Spacing>
+        <name>Pixel Spacing</name>
+        <value>2</value>
+    </SliderInt_Pixel_Spacing>
+    <SliderFloat_Brightness>
+        <name>Brightness</name>
+        <value>0.770000</value>
+    </SliderFloat_Brightness>
+    <SliderFloat_Contrast>
+        <name>Contrast</name>
+        <value>0.190000</value>
+    </SliderFloat_Contrast>
+    <Toggle_Modulate_Size>
+        <name>Modulate Size</name>
+        <value>1</value>
+    </Toggle_Modulate_Size>
+</controls>
