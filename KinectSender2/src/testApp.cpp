@@ -2,9 +2,18 @@
 
 //--------------------------------------------------------------
 void testApp::setup() {
+
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(false);
 	ofSetFrameRate(60);
+
+	cout << "SCREEN_WIDTH: " << SCREEN_WIDTH  << endl;
+	cout << "SCREEN_HEIGHT: " << SCREEN_HEIGHT  << endl;
+	cout << "CELL_SIZE: " << CELL_SIZE  << endl;
+	cout << "GRID_WIDTH: " << GRID_WIDTH  << endl;
+	cout << "GRID_HEIGHT: " << GRID_HEIGHT  << endl;
+	cout << "NUM_CELLS: " << NUM_CELLS  << endl;
+
 
 	//
 	// Set up UDP sender
@@ -16,7 +25,7 @@ void testApp::setup() {
 	int port = 12345;
 	cout <<  hostname << " --> " << destination << ":" << port << endl;
 	udpConnection.Create();
-	udpConnection.Connect(destination, port);
+	udpConnection.Connect(destination.c_str(), port);
 	udpConnection.SetNonBlocking(true);
 
 
@@ -44,17 +53,18 @@ void testApp::setup() {
 	farClipping = kinect.getFarClippingDistance();
 
 	//
-	// Allocate the textured
+	// Allocate the textures
 	//
 	colorFrame.allocate(320, 240);
 	grayFrame.allocate(320, 240);
+	grayFrame.setUseTexture(true);
 	render.allocate(GRID_WIDTH, GRID_HEIGHT);
 
 	//
 	// Initialize the cells
 	//
 	for(int i=0; i<NUM_CELLS; i++)
-		cells[i] = -1;
+		cells[i] = 0;
 
 	
 
@@ -68,11 +78,15 @@ void testApp::setup() {
 	gui.addSlider("Far Clipping", farClipping, 2000, 4000);
 	gui.addSlider("Brightness", brightness, -1, 1);
 	gui.addSlider("Contrast", contrast, -1, 1);
+	gui.addSlider("Send Threshold", changeThreshold, 3, 100); // pixels under this threshold aren't considered "changed"
+	gui.addSlider("Min Cells Change", minCellsChangedToSend, 1, 40); // don't send messages with less than x changed cells
+	gui.addSlider("Right Crop", rightCrop, 0, 100);
+	gui.addSlider("Left Crop", leftCrop, 0, 100);
 	
 	gui.addTitle("Previews").setNewColumn(true);
 	gui.addContent("Video", kinect.getVideoTextureReference(), 320);
-	gui.addContent("Gray", grayFrame.getTextureReference(), 320);
-	gui.addContent("Render", render.getTextureReference(), GRID_WIDTH).setNewColumn(true);
+	gui.addContent("Gray", grayFrame, 320);
+	gui.addContent("Render", render, SCREEN_WIDTH).setNewColumn(true);
 
 	gui.loadFromXML();
 	gui.show();
@@ -90,7 +104,8 @@ void testApp::update() {
 		grayFrame.brightnessContrast(brightness, contrast);
 		grayPixels = grayFrame.getPixelsRef();
 
-		sendUDPMessage();
+		if(ofGetElapsedTimef()-timeSinceLastSend > 1)
+			sendUDPMessage();
 	}
 
 	// Update the kinect values
@@ -108,42 +123,54 @@ void testApp::update() {
 //--------------------------------------------------------------
 void testApp::sendUDPMessage()
 {
-	message.clear();
-	message << "p1";
-	for(int y=0; y < GRID_HEIGHT; y+=GRID_CELL_SIZE)
+	int count=0;
+	stringstream message;
+	for(int y=0; y < GRID_HEIGHT; y++)
 	{
-		for(int x=0; x < GRID_WIDTH; x+=GRID_CELL_SIZE)
+		for(int x=0; x < GRID_WIDTH; x++)
 		{
 			int i = y * GRID_WIDTH + x;
+			assert(i<NUM_CELLS);
 
-			// Where should we look in the 320x240 images?
+			// Where should we look in the 320x240 images for the depth and brightness values?
 			ofPoint samplePos;
-			samplePos.x = ofMap(x, 0, GRID_WIDTH, 0,  kinect.getDepthResolutionWidth());
+			samplePos.x = ofMap(x, 0, GRID_WIDTH, leftCrop,  kinect.getDepthResolutionWidth()-rightCrop);
 			samplePos.y = ofMap(y, 0, GRID_HEIGHT, 0,  kinect.getDepthResolutionHeight());
 
 			// Get depth and alpha values (for testing whether we want this pixel)
 			int depth =  kinect.getDistanceAt(samplePos);
 			int a =  kinect.getLabelPixels().getColor(samplePos.x, samplePos.y).a;
 
+
+			// Determine the brightness for cells[i]
+			int bri;
+			if(a == 0) {
+				bri = 0;
+			} else {
+				int gray_x = ofClamp(samplePos.x+videoOffset.x, 0, grayPixels.getWidth());
+				int gray_y = ofClamp(samplePos.y+videoOffset.y, 0, grayPixels.getHeight());
+				bri = grayPixels.getColor(gray_x, gray_y).getBrightness();
+			}
+			
 			// If it passes the tests, draw/send it
-			if(a == 0) continue;
-		
-			// Get the color from the sample position
-			int gray_x = ofClamp(samplePos.x+videoOffset.x, 0, grayPixels.getWidth());
-			int gray_y = ofClamp(samplePos.y+videoOffset.y, 0, grayPixels.getHeight());
-
-			int bri = grayPixels.getColor(gray_x, gray_y).getBrightness();
-
-			if(cells[i] != bri)
+			int diff = abs(bri - cells[i]);
+			if(diff > changeThreshold)
 			{
+				count++;
+				message  << i << "=" << bri << "&";
 				cells[i] = bri;
-				message << "," << i << "," << bri;
 			}
 		}
 	}
 
-	string m = message.str();
-	udpConnection.Send(m.c_str(), m.length());
+	if(count >0)
+	{
+		string m1 = "p1:"+message.str();
+		string m2 = "p2:"+message.str();
+
+		udpConnection.Send(m1.c_str(), m1.length());
+		udpConnection.Send(m2.c_str(), m2.length());
+	}
 }
 
 //--------------------------------------------------------------
@@ -153,12 +180,12 @@ void testApp::draw() {
 	// Draw the grid
 	render.begin();
 	ofClear(0);
-	for(int y=0; y < GRID_HEIGHT; y+=GRID_CELL_SIZE)
-	for(int x=0; x < GRID_WIDTH; x+=GRID_CELL_SIZE)
+	for(int y=0; y < GRID_HEIGHT; y++)
+	for(int x=0; x < GRID_WIDTH; x++)
 	{
 		int i = y * GRID_WIDTH + x;
-		ofSetColor( cells[i] );
-		ofRect(x, y, GRID_CELL_SIZE, GRID_CELL_SIZE);
+		ofSetColor( cells[i], cells[i], cells[i] );
+		ofRect(x, y, 1, 1);
 	}
 	render.end();
 

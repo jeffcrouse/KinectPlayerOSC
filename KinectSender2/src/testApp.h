@@ -12,18 +12,21 @@
 /******************************************************************/
 #pragma once
 
+#include "ofxNetwork.h"
 #include "ofxKinectNui.h"
 #include "ofMain.h"
 #include "ofxOpenCV.h"
 #include "ofxSimpleGuiToo.h"
 //#include "Winsock2.h"
-#include "ofxNetwork.h"
 
 
-#define GRID_WIDTH 256
-#define GRID_HEIGHT 256
-#define GRID_CELL_SIZE 5
-#define NUM_CELLS (GRID_WIDTH*GRID_HEIGHT)/(GRID_CELL_SIZE)
+
+#define SCREEN_WIDTH 256
+#define SCREEN_HEIGHT 256
+#define CELL_SIZE 8
+#define GRID_WIDTH (SCREEN_WIDTH)/(CELL_SIZE)
+#define GRID_HEIGHT (SCREEN_HEIGHT)/(CELL_SIZE)
+#define NUM_CELLS GRID_WIDTH*GRID_HEIGHT
 
 
 class testApp : public ofBaseApp {
@@ -48,7 +51,7 @@ class testApp : public ofBaseApp {
 		int cells[NUM_CELLS];
 		ofFbo render;
 		ofxUDPManager udpConnection;
-		stringstream message;
+		
 
 		bool bPlugged;
 		bool bUnplugged;
@@ -58,6 +61,10 @@ class testApp : public ofBaseApp {
 		float farClipping;
 		float brightness, contrast;
 		ofPoint videoOffset;
+		int changeThreshold;
+		int minCellsChangedToSend; 
+		int leftCrop, rightCrop;
+		float timeSinceLastSend;
 
 		ofxCvColorImage colorFrame;
 		ofxCvGrayscaleImage grayFrame;
