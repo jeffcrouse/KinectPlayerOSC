@@ -129,12 +129,6 @@
     <ClCompile Include="..\..\..\addons\ofxNetwork\src\ofxTCPClient.cpp">
       <Filter>addons\ofxNetwork\src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lz4\lz4.c">
-      <Filter>lz4</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lz4\lz4hc.c">
-      <Filter>lz4</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\addons\ofxKinectNui\src\win32\Event.h">
@@ -306,12 +300,6 @@
     <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxTCPClient.h">
       <Filter>addons\ofxNetwork\src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lz4\lz4.h">
-      <Filter>lz4</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lz4\lz4hc.h">
-      <Filter>lz4</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="addons">
@@ -363,7 +351,7 @@
       <UniqueIdentifier>{ac990995-17d5-4971-9e47-d62dbbeb049e}</UniqueIdentifier>
     </Filter>
     <Filter Include="lz4">
-      <UniqueIdentifier>{e7a12065-bdbe-431e-b247-13f68bf6ddb8}</UniqueIdentifier>
+      <UniqueIdentifier>{01180190-2a59-4f3f-9c9b-fa3bc6a6839f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

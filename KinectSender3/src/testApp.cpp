@@ -21,13 +21,12 @@ void testApp::setup() {
 	char szPath[128] = "";
     gethostname(szPath, sizeof(szPath));
 	string hostname = string(szPath);
-	string destination="192.168.2.255";
 	int port = 12345;
-	cout <<  hostname << " --> " << destination << ":" << port << endl;
-	udpConnection.Create();
-	udpConnection.Connect(destination.c_str(), port);
-	udpConnection.SetNonBlocking(true);
-
+	cout <<  hostname << ":" << port << endl;
+	//setup the server to listen on 11999
+	TCP.setup(port);
+	//optionally set the delimiter to something else.  The delimter in the client and the server have to be the same, default being [/TCP]
+	TCP.setMessageDelimiter("\n");
 
 	//
 	// Set up Kinect camera
@@ -67,8 +66,6 @@ void testApp::setup() {
 		cells[i] = 0;
 
 	
-
-
 	//
 	// Set up GUI
 	//
@@ -79,7 +76,7 @@ void testApp::setup() {
 	gui.addSlider("Brightness", brightness, -1, 1);
 	gui.addSlider("Contrast", contrast, -1, 1);
 	gui.addSlider("Send Threshold", changeThreshold, 3, 100); // pixels under this threshold aren't considered "changed"
-	//gui.addSlider("Min Cells Change", minCellsChangedToSend, 1, 40); // don't send messages with less than x changed cells
+	gui.addSlider("Min Cells Change", minCellsChangedToSend, 1, 40); // don't send messages with less than x changed cells
 	gui.addSlider("Right Crop", rightCrop, 0, 100);
 	gui.addSlider("Left Crop", leftCrop, 0, 100);
 	
@@ -104,7 +101,8 @@ void testApp::update() {
 		grayFrame.brightnessContrast(brightness, contrast);
 		grayPixels = grayFrame.getPixelsRef();
 
-		sendUDPMessage();
+		if(ofGetElapsedTimef()-timeSinceLastSend > 1)
+			sendMessage();
 	}
 
 	// Update the kinect values
@@ -120,7 +118,7 @@ void testApp::update() {
 }
 
 //--------------------------------------------------------------
-void testApp::sendUDPMessage()
+void testApp::sendMessage()
 {
 	int count=0;
 	stringstream message;
@@ -153,30 +151,22 @@ void testApp::sendUDPMessage()
 			
 			// If it passes the tests, draw/send it
 			int diff = abs(bri - cells[i]);
-			//if(diff > changeThreshold)
+			if(diff > changeThreshold)
 			{
 				count++;
-				//message  << i << "=" << bri << "&";
-				if(bri==0) {
-					message << ",";
-				} else {
-					message << bri << ",";
-				}
+				message  << bri << ",";
 				cells[i] = bri;
 			}
 		}
 	}
 
-
-
-	if(count > 0)
+	if(count >0)
 	{
-		string m1 = message.str();
-		char dest[5000];
-		int size = LZ4_compressHC(m1.c_str(), dest, m1.length());
+		string m1 = "p1:"+message.str();
+		string m2 = "p2:"+message.str();
+
 		//udpConnection.Send(m1.c_str(), m1.length());
-		if(size != 26)
-			cout << "uncompressed: " << m1.length() << " compressed: " << size << endl;
+		//udpConnection.Send(m2.c_str(), m2.length());
 	}
 }
 

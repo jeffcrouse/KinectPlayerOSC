@@ -21,8 +21,12 @@
     </SliderFloat_Contrast>
     <SliderInt_Send_Threshold>
         <name>Send Threshold</name>
-        <value>37</value>
+        <value>3</value>
     </SliderInt_Send_Threshold>
+    <SliderInt_Min_Cells_Change>
+        <name>Min Cells Change</name>
+        <value>1</value>
+    </SliderInt_Min_Cells_Change>
     <SliderInt_Right_Crop>
         <name>Right Crop</name>
         <value>16</value>

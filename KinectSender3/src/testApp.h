@@ -26,10 +26,9 @@
 #include "bench.h"
 
 
-
 #define SCREEN_WIDTH 256
 #define SCREEN_HEIGHT 256
-#define CELL_SIZE 4
+#define CELL_SIZE 8
 #define GRID_WIDTH (SCREEN_WIDTH)/(CELL_SIZE)
 #define GRID_HEIGHT (SCREEN_HEIGHT)/(CELL_SIZE)
 #define NUM_CELLS GRID_WIDTH*GRID_HEIGHT
@@ -40,7 +39,7 @@ class testApp : public ofBaseApp {
 
 		void setup();
 		void update();
-		void sendUDPMessage();
+		void sendMessage();
 		void draw();
 		void exit();
 
@@ -54,10 +53,8 @@ class testApp : public ofBaseApp {
 		void kinectUnplugged();
 
 		ofxKinectNui kinect;
-		int cells[NUM_CELLS];
-		ofFbo render;
-		ofxUDPManager udpConnection;
-		
+		unsigned char cells[NUM_CELLS];
+		ofFbo render;	
 
 		bool bPlugged;
 		bool bUnplugged;
@@ -67,11 +64,14 @@ class testApp : public ofBaseApp {
 		float farClipping;
 		float brightness, contrast;
 		ofPoint videoOffset;
-		int changeThreshold; 
+		int changeThreshold;
+		int minCellsChangedToSend; 
 		int leftCrop, rightCrop;
 		float timeSinceLastSend;
 
 		ofxCvColorImage colorFrame;
 		ofxCvGrayscaleImage grayFrame;
 		ofPixels grayPixels;
+
+		ofxTCPServer TCP;
 };
