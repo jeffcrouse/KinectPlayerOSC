@@ -12,21 +12,35 @@
 /******************************************************************/
 #pragma once
 
+#include "ofxNetwork.h"
 #include "ofxKinectNui.h"
 #include "ofMain.h"
 #include "ofxOpenCV.h"
 #include "ofxSimpleGuiToo.h"
-#include "ofxOsc.h"
-//#include "Winsock2.h"
+#ifdef _WIN32
+#include <io.h>			// _setmode
+#include <fcntl.h>		// _O_BINARY
+#endif
+#include "lz4.h"
+#include "lz4hc.h"
+#include "bench.h"
 
-#define DEST_WIDTH 256
-#define DEST_HEIGHT 256
+
+
+#define SCREEN_WIDTH 256
+#define SCREEN_HEIGHT 256
+#define CELL_SIZE 4
+#define GRID_WIDTH (SCREEN_WIDTH)/(CELL_SIZE)
+#define GRID_HEIGHT (SCREEN_HEIGHT)/(CELL_SIZE)
+#define NUM_CELLS GRID_WIDTH*GRID_HEIGHT
+
 
 class testApp : public ofBaseApp {
 	public:
 
 		void setup();
 		void update();
+		void sendUDPMessage();
 		void draw();
 		void exit();
 
@@ -40,22 +54,22 @@ class testApp : public ofBaseApp {
 		void kinectUnplugged();
 
 		ofxKinectNui kinect;
-		ofxBase3DVideo* kinectSource;
-		ofxOscSender sender;
+		int cells[NUM_CELLS];
+		ofFbo render;
+		ofxUDPManager udpConnection;
+		
 
 		bool bPlugged;
 		bool bUnplugged;
 
-		ofPoint renderPos;
-		float pixelSize;
-		int pixelSpacing;
 		int kinectAngle;
 		float nearClipping;
 		float farClipping;
 		float brightness, contrast;
-		bool bModulatePixelSize;
-		ofFbo render;
 		ofPoint videoOffset;
+		int changeThreshold; 
+		int leftCrop, rightCrop;
+		float timeSinceLastSend;
 
 		ofxCvColorImage colorFrame;
 		ofxCvGrayscaleImage grayFrame;
