@@ -153,15 +153,10 @@ void testApp::sendUDPMessage()
 			
 			// If it passes the tests, draw/send it
 			int diff = abs(bri - cells[i]);
-			//if(diff > changeThreshold)
+			if(diff > changeThreshold)
 			{
 				count++;
-				//message  << i << "=" << bri << "&";
-				if(bri==0) {
-					message << ",";
-				} else {
-					message << bri << ",";
-				}
+				message  << i << "=" << bri << "&";
 				cells[i] = bri;
 			}
 		}
@@ -174,9 +169,7 @@ void testApp::sendUDPMessage()
 		string m1 = message.str();
 		char dest[5000];
 		int size = LZ4_compressHC(m1.c_str(), dest, m1.length());
-		//udpConnection.Send(m1.c_str(), m1.length());
-		if(size != 26)
-			cout << "uncompressed: " << m1.length() << " compressed: " << size << endl;
+		udpConnection.Send(m1.c_str(), m1.length());
 	}
 }
 
