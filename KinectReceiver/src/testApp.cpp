@@ -19,6 +19,9 @@ void testApp::setup(){
 	tcpClient.setMessageDelimiter("\n");
     tcpClient.setVerbose(true);
 #endif
+#ifdef USE_OSC
+    receiver.setup( port );
+#endif
     
 	//
 	// Initialize the cells
@@ -36,39 +39,84 @@ void testApp::setup(){
 void testApp::update(){
 
     string message;
+    string m1, m2;
     int size;
-   
-    
     
 #ifdef USE_UDP
-     char messageCompressed[7000];
-	size = udpConnection.Receive(messageCompressed, 7000);
-    message = messageCompressed;
+    char compressed[7000];
+	size = udpConnection.Receive(compressed, 7000);
+    message = compressed;
 #endif
     
     
 #ifdef USE_TCP
     message = tcpClient.receive();
+    if(message != "")
+    {
+        vector<string> player = ofSplitString(message, ":", true, true);
+        if(player[0]=="p1") {
+            m1 = player[1];
+        }
+        if(player[0]=="p2") {
+            m2 = player[1];
+        }
+    }
+#endif
+ 
+#ifdef USE_OSC
+    while( receiver.hasWaitingMessages() )
+	{
+		ofxOscMessage m;
+		receiver.getNextMessage( &m );
+        if(m.getAddress()=="/p1")
+        {
+            //string compressed = m.getArgAsString(0);
+            //char uncompressed[10000];
+            //size = LZ4_uncompress_unknownOutputSize(compressed.c_str(), uncompressed, compressed.length(), 10000);
+            
+            m1 += " | " +  m.getArgAsString(0);
+        }
+        
+        if(m.getAddress()=="/p2")
+        {
+            //string compressed = m.getArgAsString(0);
+            //char uncompressed[10000];
+            //size = LZ4_uncompress_unknownOutputSize(compressed.c_str(), uncompressed, compressed.length(), 10000);
+            
+            m2 += " | " +  m.getArgAsString(0);
+        }
+    }
 #endif
     
-	if(message!="")
+	if(m1!="")
 	{
-        char messageUncompressed[7000];
-        size = LZ4_uncompress(message.c_str(), messageUncompressed, 7000);
-        message = messageUncompressed;
-        cout << message << endl;
+		vector<string> updates = ofSplitString(m1, "&", false, false);
+		for(int i=0; i<updates.size(); i++)
+		{
+			vector<string> cell = ofSplitString(updates[i], "=", false, false);
+            if(cell.size()>0) {
+                int index = ofToInt( cell[0] );
+                int bri = 0;
+                if(cell.size()>1) {
+                    bri = ofToInt( cell[1] );
+                }
+                p1[index] = bri;
+            }
+		}
+	}
 
-        /*
-		vector<string> updates = ofSplitString(message, "&", true, true);
+    
+    
+	if(m2!="")
+	{
+		vector<string> updates = ofSplitString(m2, "&", true, true);
 		for(int i=0; i<updates.size(); i++)
 		{
 			vector<string> cell = ofSplitString(updates[i], "=", true, true);
 			int index = ofToInt( cell[0] );
 			int bri = ofToInt( cell[1] );
-			p1[index] = bri;
 			p2[index] = bri;
 		}
-       */
 	}
 
 

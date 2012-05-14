@@ -1,13 +1,14 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxOsc.h"
 #include "ofxNetwork.h"
 #include "lz4.h"
 #include "lz4hc.h"
 
 #define SCREEN_WIDTH 256
 #define SCREEN_HEIGHT 256
-#define CELL_SIZE 4
+#define CELL_SIZE 6
 #define GRID_WIDTH (SCREEN_WIDTH)/(CELL_SIZE)
 #define GRID_HEIGHT (SCREEN_HEIGHT)/(CELL_SIZE)
 #define NUM_CELLS GRID_WIDTH*GRID_HEIGHT
@@ -37,6 +38,9 @@ class testApp : public ofBaseApp{
 #endif
 #ifdef USE_TCP
         ofxTCPClient tcpClient;
+#endif
+#ifdef USE_OSC
+        ofxOscReceiver	receiver;
 #endif
     
 		int p1[NUM_CELLS];
