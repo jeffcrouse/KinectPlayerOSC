@@ -24,10 +24,16 @@ void testApp::setup() {
 	string destination="192.168.1.103";
 	int port = 12345;
 	cout <<  hostname << " --> " << destination << ":" << port << endl;
+
+#ifdef USE_UDP
 	udpConnection.Create();
 	udpConnection.Connect(destination.c_str(), port);
 	udpConnection.SetNonBlocking(true);
-
+#endif
+#ifdef USE_TCP
+	TCP.setup(port);
+	TCP.setMessageDelimiter("\n");
+#endif
 
 	//
 	// Set up Kinect camera
@@ -169,7 +175,17 @@ void testApp::sendUDPMessage()
 		string m1 = message.str();
 		char dest[10000];
 		int size = LZ4_compressHC(m1.c_str(), dest, m1.length());
-		udpConnection.Send(m1.c_str(), m1.length());
+		string compressed = dest; 
+
+#ifdef USE_UDP
+		udpConnection.Send(compressed.c_str(), compressed.length());
+#endif
+#ifdef USE_TCP
+	for(int i = 0; i < TCP.getLastID(); i++) {
+		if( !TCP.isClientConnected(i) )continue;
+		TCP.send(i, compressed);
+	}
+#endif
 	}
 }
 

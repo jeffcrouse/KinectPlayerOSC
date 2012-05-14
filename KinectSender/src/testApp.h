@@ -34,6 +34,7 @@
 #define GRID_HEIGHT (SCREEN_HEIGHT)/(CELL_SIZE)
 #define NUM_CELLS GRID_WIDTH*GRID_HEIGHT
 
+#define USE_TCP
 
 class testApp : public ofBaseApp {
 	public:
@@ -56,8 +57,13 @@ class testApp : public ofBaseApp {
 		ofxKinectNui kinect;
 		int cells[NUM_CELLS];
 		ofFbo render;
+
+#ifdef USE_UDP
 		ofxUDPManager udpConnection;
-		
+#endif
+#ifdef USE_TCP
+		ofxTCPServer TCP;
+#endif
 
 		bool bPlugged;
 		bool bUnplugged;
