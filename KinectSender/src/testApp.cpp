@@ -175,14 +175,15 @@ void testApp::sendUDPMessage()
 		string m1 = message.str();
 		char dest[10000];
 		int size = LZ4_compressHC(m1.c_str(), dest, m1.length());
+		string compressed = dest; 
 
 #ifdef USE_UDP
-		udpConnection.Send(m1.c_str(), m1.length());
+		udpConnection.Send(compressed.c_str(), compressed.length());
 #endif
 #ifdef USE_TCP
 	for(int i = 0; i < TCP.getLastID(); i++) {
 		if( !TCP.isClientConnected(i) )continue;
-		TCP.send(i, m1);
+		TCP.send(i, compressed);
 	}
 #endif
 	}
