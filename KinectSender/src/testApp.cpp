@@ -2,18 +2,36 @@
 
 //--------------------------------------------------------------
 void testApp::setup() {
+
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(false);
+	ofSetFrameRate(60);
+
+	cout << "SCREEN_WIDTH: " << SCREEN_WIDTH  << endl;
+	cout << "SCREEN_HEIGHT: " << SCREEN_HEIGHT  << endl;
+	cout << "CELL_SIZE: " << CELL_SIZE  << endl;
+	cout << "GRID_WIDTH: " << GRID_WIDTH  << endl;
+	cout << "GRID_HEIGHT: " << GRID_HEIGHT  << endl;
+	cout << "NUM_CELLS: " << NUM_CELLS  << endl;
 
 
+	//
+	// Set up UDP sender
+	//
 	char szPath[128] = "";
     gethostname(szPath, sizeof(szPath));
 	string hostname = string(szPath);
 	string destination="192.168.2.255";
 	int port = 12345;
 	cout <<  hostname << " --> " << destination << ":" << port << endl;
-	sender.setup( destination, port );
+	udpConnection.Create();
+	udpConnection.Connect(destination.c_str(), port);
+	udpConnection.SetNonBlocking(true);
 
+
+	//
+	// Set up Kinect camera
+	//
 	bool grabVideo = true;
 	bool grabDepth = true;
 	bool grabAudio = false;
@@ -29,35 +47,46 @@ void testApp::setup() {
 	kinect.init(grabVideo, grabDepth, grabAudio, grabLabel, grabSkeleton, grabCalibratedVideo, grabLabelCv, useTexture, videoResolution, depthResolution);
 	kinect.open(nearmode);
 	kinect.addKinectListener(this, &testApp::kinectPlugged, &testApp::kinectUnplugged);
-	kinectSource = &kinect;
 	kinectAngle = kinect.getCurrentAngle();
 	bPlugged = kinect.isConnected();
-	//nearClipping = kinect.getNearClippingDistance();
-	//farClipping = kinect.getFarClippingDistance();
-	renderPos.set(400, 110);
+	nearClipping = kinect.getNearClippingDistance();
+	farClipping = kinect.getFarClippingDistance();
 
-	render.allocate(DEST_WIDTH, DEST_HEIGHT);
+	//
+	// Allocate the textures
+	//
 	colorFrame.allocate(320, 240);
 	grayFrame.allocate(320, 240);
+	grayFrame.setUseTexture(true);
+	render.allocate(GRID_WIDTH, GRID_HEIGHT);
 
+	//
+	// Initialize the cells
+	//
+	for(int i=0; i<NUM_CELLS; i++)
+		cells[i] = 0;
+
+	
+
+
+	//
+	// Set up GUI
+	//
 	gui.addTitle("All Controls");
 	gui.addSlider("Angle", kinectAngle, -27, 27); 
 	gui.addSlider("Near Clipping", nearClipping, 800, 1000);
 	gui.addSlider("Far Clipping", farClipping, 2000, 4000);
-	gui.addSlider("Pixel Size", pixelSize, 2, 10);
-	gui.addSlider("Pixel Spacing", pixelSpacing, 0, 10);
 	gui.addSlider("Brightness", brightness, -1, 1);
 	gui.addSlider("Contrast", contrast, -1, 1);
-	gui.addToggle("Modulate Size", bModulatePixelSize);
+	gui.addSlider("Send Threshold", changeThreshold, 3, 100); // pixels under this threshold aren't considered "changed"
+	//gui.addSlider("Min Cells Change", minCellsChangedToSend, 1, 40); // don't send messages with less than x changed cells
+	gui.addSlider("Right Crop", rightCrop, 0, 100);
+	gui.addSlider("Left Crop", leftCrop, 0, 100);
 	
-
 	gui.addTitle("Previews").setNewColumn(true);
 	gui.addContent("Video", kinect.getVideoTextureReference(), 320);
-	gui.addContent("Gray", grayFrame.getTextureReference(), 320);
-	gui.addContent("Render", render.getTextureReference(), DEST_WIDTH).setNewColumn(true);
-
-
-	ofSetFrameRate(60);
+	gui.addContent("Gray", grayFrame, 320);
+	gui.addContent("Render", render, SCREEN_WIDTH).setNewColumn(true);
 
 	gui.loadFromXML();
 	gui.show();
@@ -74,96 +103,98 @@ void testApp::update() {
 		grayFrame = colorFrame;
 		grayFrame.brightnessContrast(brightness, contrast);
 		grayPixels = grayFrame.getPixelsRef();
+
+		sendUDPMessage();
 	}
 
 	// Update the kinect values
-	if(kinectAngle != kinect.getCurrentAngle()) {
+	if(kinectAngle != kinect.getCurrentAngle()) 
 		kinect.setAngle( kinectAngle );
+	
+	if(nearClipping != kinect.getNearClippingDistance()) 
+		kinect.setNearClippingDistance( nearClipping );
+	
+	if(farClipping != kinect.getFarClippingDistance()) 
+		kinect.setFarClippingDistance( farClipping );
+
+}
+
+//--------------------------------------------------------------
+void testApp::sendUDPMessage()
+{
+	int count=0;
+	stringstream message;
+	for(int y=0; y < GRID_HEIGHT; y++)
+	{
+		for(int x=0; x < GRID_WIDTH; x++)
+		{
+			int i = y * GRID_WIDTH + x;
+			assert(i<NUM_CELLS);
+
+			// Where should we look in the 320x240 images for the depth and brightness values?
+			ofPoint samplePos;
+			samplePos.x = ofMap(x, 0, GRID_WIDTH, leftCrop,  kinect.getDepthResolutionWidth()-rightCrop);
+			samplePos.y = ofMap(y, 0, GRID_HEIGHT, 0,  kinect.getDepthResolutionHeight());
+
+			// Get depth and alpha values (for testing whether we want this pixel)
+			int depth =  kinect.getDistanceAt(samplePos);
+			int a =  kinect.getLabelPixels().getColor(samplePos.x, samplePos.y).a;
+
+
+			// Determine the brightness for cells[i]
+			int bri;
+			if(a == 0) {
+				bri = 0;
+			} else {
+				int gray_x = ofClamp(samplePos.x+videoOffset.x, 0, grayPixels.getWidth());
+				int gray_y = ofClamp(samplePos.y+videoOffset.y, 0, grayPixels.getHeight());
+				bri = grayPixels.getColor(gray_x, gray_y).getBrightness();
+			}
+			
+			// If it passes the tests, draw/send it
+			int diff = abs(bri - cells[i]);
+			//if(diff > changeThreshold)
+			{
+				count++;
+				//message  << i << "=" << bri << "&";
+				if(bri==0) {
+					message << ",";
+				} else {
+					message << bri << ",";
+				}
+				cells[i] = bri;
+			}
+		}
 	}
 
-	/*
-	if(nearClipping != kinect.getNearClippingDistance()) {
-		kinect.setNearClippingDistance( nearClipping );
+
+
+	if(count > 0)
+	{
+		string m1 = message.str();
+		char dest[5000];
+		int size = LZ4_compressHC(m1.c_str(), dest, m1.length());
+		//udpConnection.Send(m1.c_str(), m1.length());
+		if(size != 26)
+			cout << "uncompressed: " << m1.length() << " compressed: " << size << endl;
 	}
-	if(farClipping != kinect.getFarClippingDistance()) {
-		kinect.setFarClippingDistance( farClipping );
-	}
-	*/
 }
 
 //--------------------------------------------------------------
 void testApp::draw() {
 	ofBackground(0);
 
-	int numPixels=0;
+	// Draw the grid
 	render.begin();
 	ofClear(0);
-	ofFill(); 
-	
-	ofxOscMessage m;
-	m.setAddress( "/p1" );
-
-	for(int y=0; y<render.getHeight(); y+=pixelSize+pixelSpacing)
+	for(int y=0; y < GRID_HEIGHT; y++)
+	for(int x=0; x < GRID_WIDTH; x++)
 	{
-		for(int x=0; x<render.getWidth(); x+=pixelSize+pixelSpacing)
-		{
-			if(x >= DEST_WIDTH || y >= DEST_HEIGHT || m.getNumArgs() > 810) continue;
-
-			// calculate where in the kinect stuff we should sample
-			ofPoint samplePos;
-			samplePos.x = ofMap(x, 0, render.getWidth(), 0,  kinect.getDepthResolutionWidth());
-			samplePos.y = ofMap(y, 0, render.getHeight(), 0,  kinect.getDepthResolutionHeight());
-
-			// Get depth and alpha values (for testing whether we want this pixel)
-			int depth =  kinect.getDistanceAt(samplePos);
-			int a =  kinect.getLabelPixels().getColor(samplePos.x, samplePos.y).a;
-
-			// If it passes the tests, draw/send it
-			if(a > 0 && ofInRange(depth, nearClipping, farClipping) )
-			{
-				// Get the color from the sample position
-				samplePos+=videoOffset;
-				samplePos.x = ofClamp(samplePos.x, 0, grayPixels.getWidth());
-				samplePos.y = ofClamp(samplePos.y, 0,  grayPixels.getHeight());
-				ofColor color = grayPixels.getColor(samplePos.x, samplePos.y);
-
-				// Calculate size of pixel
-				float size = bModulatePixelSize 
-					?  ofMap(depth, nearClipping, farClipping, pixelSize, 2, true)
-					: pixelSize;
-				
-				// Add this pixel to the message
-				m.addIntArg( x );
-				m.addIntArg( y );
-				m.addIntArg( color.getBrightness() );
-
-				// Draw the pixel into the FBO
-				ofPushMatrix();
-				ofTranslate(x, y, 0);
-				ofSetColor(color);
-				ofRect(0, 0, size, size);
-				numPixels++;
-				ofPopMatrix();
-			}
-		}
+		int i = y * GRID_WIDTH + x;
+		ofSetColor( cells[i], cells[i], cells[i] );
+		ofRect(x, y, 1, 1);
 	}
-	/*
-	cout << "sending message: " << m.getAddress() << ": ";
-	for(int i=0; i<m.getNumArgs(); i++) {
-		cout << m.getArgAsFloat(i) << ", ";
-	}
-	cout << endl;
-	*/
-	sender.sendMessage( m );
-	m.setAddress("/p2");
-	sender.sendMessage( m );
 	render.end();
-	
-
-	ofSetColor(255);
-	stringstream report;
-	report << "total pixels: " << numPixels << endl;
-	ofDrawBitmapString(report.str(), 10, ofGetHeight()-20);
 
 	gui.draw();
 }
@@ -175,7 +206,6 @@ void testApp::exit() {
 
 	kinect.setAngle(0);
 	kinect.close();
-
 	kinect.removeKinectListener(this);
 }
 
@@ -197,16 +227,16 @@ void testApp::keyPressed (int key) {
 		kinect.close();
 		break;
 	case OF_KEY_RIGHT:
-		renderPos.x++;
+		videoOffset.x++;
 		break;
 	case OF_KEY_LEFT:
-		renderPos.x--;
+		videoOffset.x--;
 		break;
 	case OF_KEY_UP:
-		renderPos.y--;
+		videoOffset.y--;
 		break;
 	case OF_KEY_DOWN:
-		renderPos.y++;
+		videoOffset.y++;
 		break;
 	}
 }

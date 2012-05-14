@@ -117,17 +117,23 @@
     <ClCompile Include="..\..\..\addons\ofxMSAInteractiveObject\src\ofxMSAInteractiveObject.cpp">
       <Filter>addons\ofxMSAInteractiveObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp">
-      <Filter>addons\ofxOSC\src</Filter>
+    <ClCompile Include="..\..\..\addons\ofxNetwork\src\ofxTCPManager.cpp">
+      <Filter>addons\ofxNetwork\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.cpp">
-      <Filter>addons\ofxOSC\src</Filter>
+    <ClCompile Include="..\..\..\addons\ofxNetwork\src\ofxTCPServer.cpp">
+      <Filter>addons\ofxNetwork\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.cpp">
-      <Filter>addons\ofxOSC\src</Filter>
+    <ClCompile Include="..\..\..\addons\ofxNetwork\src\ofxUDPManager.cpp">
+      <Filter>addons\ofxNetwork\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscSender.cpp">
-      <Filter>addons\ofxOSC\src</Filter>
+    <ClCompile Include="..\..\..\addons\ofxNetwork\src\ofxTCPClient.cpp">
+      <Filter>addons\ofxNetwork\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lz4\lz4.c">
+      <Filter>lz4</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lz4\lz4hc.c">
+      <Filter>lz4</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -282,23 +288,29 @@
     <ClInclude Include="..\..\..\addons\ofxKinectNui\src\ofxBase3DVideo.h">
       <Filter>addons\ofxKinectNui\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOsc.h">
-      <Filter>addons\ofxOSC\src</Filter>
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxTCPManager.h">
+      <Filter>addons\ofxNetwork\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscArg.h">
-      <Filter>addons\ofxOSC\src</Filter>
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxTCPServer.h">
+      <Filter>addons\ofxNetwork\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.h">
-      <Filter>addons\ofxOSC\src</Filter>
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxUDPManager.h">
+      <Filter>addons\ofxNetwork\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.h">
-      <Filter>addons\ofxOSC\src</Filter>
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxNetwork.h">
+      <Filter>addons\ofxNetwork\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.h">
-      <Filter>addons\ofxOSC\src</Filter>
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxNetworkUtils.h">
+      <Filter>addons\ofxNetwork\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscSender.h">
-      <Filter>addons\ofxOSC\src</Filter>
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxTCPClient.h">
+      <Filter>addons\ofxNetwork\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lz4\lz4.h">
+      <Filter>lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lz4\lz4hc.h">
+      <Filter>lz4</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -329,15 +341,6 @@
     <Filter Include="addons\ofxMSAInteractiveObject">
       <UniqueIdentifier>{3cf07e91-1992-4f09-a11b-3b8561cadda2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="addons\ofxOSC">
-      <UniqueIdentifier>{fa5bcb1b-20ae-4d41-b657-f8b50e13f87b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxOSC\src">
-      <UniqueIdentifier>{c1184bbe-ee44-41b5-b3c4-2827f0da6538}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxOSC\lib">
-      <UniqueIdentifier>{ac1d1783-9524-4a31-bf3c-f8e65599c696}</UniqueIdentifier>
-    </Filter>
     <Filter Include="addons\ofxKinectNui">
       <UniqueIdentifier>{41a2b0ca-3ef8-475b-97c2-628cf256ce13}</UniqueIdentifier>
     </Filter>
@@ -352,6 +355,15 @@
     </Filter>
     <Filter Include="addons\ofxKinectNui\src\kinect\nui">
       <UniqueIdentifier>{ebd74895-655a-46f0-a210-57d210bcaef0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxNetwork">
+      <UniqueIdentifier>{7c2b7f06-1d23-490f-8317-418c65a9c7f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxNetwork\src">
+      <UniqueIdentifier>{ac990995-17d5-4971-9e47-d62dbbeb049e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lz4">
+      <UniqueIdentifier>{e7a12065-bdbe-431e-b247-13f68bf6ddb8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -450,12 +462,6 @@
     </Library>
     <Library Include="..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs2010\opencv_lapack.lib">
       <Filter>addons\ofxOpenCV\libs</Filter>
-    </Library>
-    <Library Include="..\..\..\addons\ofxOsc\libs\oscpack\lib\vs2010\oscpack.lib">
-      <Filter>addons\ofxOSC\lib</Filter>
-    </Library>
-    <Library Include="..\..\..\addons\ofxOsc\libs\oscpack\lib\vs2010\oscpackd.lib">
-      <Filter>addons\ofxOSC\lib</Filter>
     </Library>
   </ItemGroup>
 </Project>

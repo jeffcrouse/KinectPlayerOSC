@@ -1,48 +1,34 @@
 <controls>
     <SliderInt_Angle>
         <name>Angle</name>
-        <value>4</value>
+        <value>13</value>
     </SliderInt_Angle>
     <SliderFloat_Near_Clipping>
         <name>Near Clipping</name>
-        <value>935.000000</value>
+        <value>844.000000</value>
     </SliderFloat_Near_Clipping>
     <SliderFloat_Far_Clipping>
         <name>Far Clipping</name>
-        <value>3260.000000</value>
+        <value>4000.000000</value>
     </SliderFloat_Far_Clipping>
-    <SliderFloat_Pixel_Size>
-        <name>Pixel Size</name>
-        <value>4.225000</value>
-    </SliderFloat_Pixel_Size>
-    <SliderInt_Pixel_Spacing>
-        <name>Pixel Spacing</name>
-        <value>1</value>
-    </SliderInt_Pixel_Spacing>
-    <SliderFloat_Player_Fill>
-        <name>Player Fill</name>
-        <value>0.095000</value>
-    </SliderFloat_Player_Fill>
     <SliderFloat_Brightness>
         <name>Brightness</name>
-        <value>0.270000</value>
+        <value>1.000000</value>
     </SliderFloat_Brightness>
     <SliderFloat_Contrast>
         <name>Contrast</name>
-        <value>0.530000</value>
+        <value>0.330000</value>
     </SliderFloat_Contrast>
-    <Toggle_Modulate_Size>
-        <name>Modulate Size</name>
-        <value>1</value>
-    </Toggle_Modulate_Size>
-    <Slider2D_Video_Offset>
-        <name>Video Offset</name>
-        <valueX>-2.173913</valueX>
-        <valueY>1.304348</valueY>
-    </Slider2D_Video_Offset>
-    <Slider2D_Render_Pos>
-        <name>Render Pos</name>
-        <valueX>612.173889</valueX>
-        <valueY>275.478271</valueY>
-    </Slider2D_Render_Pos>
+    <SliderInt_Send_Threshold>
+        <name>Send Threshold</name>
+        <value>37</value>
+    </SliderInt_Send_Threshold>
+    <SliderInt_Right_Crop>
+        <name>Right Crop</name>
+        <value>16</value>
+    </SliderInt_Right_Crop>
+    <SliderInt_Left_Crop>
+        <name>Left Crop</name>
+        <value>16</value>
+    </SliderInt_Left_Crop>
 </controls>

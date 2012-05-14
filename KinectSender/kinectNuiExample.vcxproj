@@ -83,7 +83,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\libs\openFrameworks;..\..\..\libs\openFrameworks\graphics;..\..\..\libs\openFrameworks\app;..\..\..\libs\openFrameworks\sound;..\..\..\libs\openFrameworks\utils;..\..\..\libs\openFrameworks\communication;..\..\..\libs\openFrameworks\video;..\..\..\libs\openFrameworks\math;..\..\..\libs\openFrameworks\types;..\..\..\libs\openFrameworks\events;..\..\..\libs\glut\include;..\..\..\libs\rtAudio\include;..\..\..\libs\quicktime\include;..\..\..\libs\freetype\include;..\..\..\libs\freetype\include\freetype2;..\..\..\libs\freeImage\include;..\..\..\libs\fmodex\include;..\..\..\libs\videoInput\include;..\..\..\libs\glew\include\;..\..\..\libs\glu\include;..\..\..\libs\poco\include;..\..\..\addons;..\..\..\libs\openFrameworks\gl;..\..\..\libs\openFrameworks\3d;..\..\..\libs\tess2\include;..\..\..\libs\cairo\include\cairo;$(KINECTSDK10_DIR)\inc;..\..\..\addons\ofxKinectNui\src;../../../addons/ofxOpenCv/src;../../../addons/ofxOpenCv/libs/opencv/include/opencv;../../../addons/ofxOpenCv/libs/opencv/include;..\..\..\addons\ofxMSAInteractiveObject\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src;..\..\..\addons\ofxSimpleGuiToo\src;../../../addons/ofxSimpleGuiToo/src/Controls;../../../addons\ofxOsc\libs\oscpack\include\ip;../../../addons\ofxOsc\libs\oscpack\include\osc;../../../addons\ofxOsc\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\libs\openFrameworks;..\..\..\libs\openFrameworks\graphics;..\..\..\libs\openFrameworks\app;..\..\..\libs\openFrameworks\sound;..\..\..\libs\openFrameworks\utils;..\..\..\libs\openFrameworks\communication;..\..\..\libs\openFrameworks\video;..\..\..\libs\openFrameworks\math;..\..\..\libs\openFrameworks\types;..\..\..\libs\openFrameworks\events;..\..\..\libs\glut\include;..\..\..\libs\rtAudio\include;..\..\..\libs\quicktime\include;..\..\..\libs\freetype\include;..\..\..\libs\freetype\include\freetype2;..\..\..\libs\freeImage\include;..\..\..\libs\fmodex\include;..\..\..\libs\videoInput\include;..\..\..\libs\glew\include\;..\..\..\libs\glu\include;..\..\..\libs\poco\include;..\..\..\addons;..\..\..\libs\openFrameworks\gl;..\..\..\libs\openFrameworks\3d;..\..\..\libs\tess2\include;..\..\..\libs\cairo\include\cairo;$(KINECTSDK10_DIR)\inc;..\addons\ofxKinectNui\src;../../../addons/ofxOpenCv/src;../../../addons/ofxOpenCv/libs/opencv/include/opencv;../../../addons/ofxOpenCv/libs/opencv/include;..\addons\ofxMSAInteractiveObject\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src;..\addons\ofxSimpleGuiToo\src;../addons/ofxSimpleGuiToo/src/Controls;..\..\..\addons\ofxNetwork\src;src\lz4</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;POCO_STATIC;CAIRO_WIN32_STATIC_BUILD;DISABLE_SOME_FLOATING_POINT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -149,7 +149,7 @@ if not exist "$(ProjectDir)bin\data" mkdir  "$(ProjectDir)bin\data"
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\..\libs\openFrameworks;..\..\..\libs\openFrameworks\graphics;..\..\..\libs\openFrameworks\app;..\..\..\libs\openFrameworks\sound;..\..\..\libs\openFrameworks\utils;..\..\..\libs\openFrameworks\communication;..\..\..\libs\openFrameworks\video;..\..\..\libs\openFrameworks\math;..\..\..\libs\openFrameworks\types;..\..\..\libs\openFrameworks\events;..\..\..\libs\glut\include;..\..\..\libs\rtAudio\include;..\..\..\libs\quicktime\include;..\..\..\libs\freetype\include;..\..\..\libs\freetype\include\freetype2;..\..\..\libs\freeImage\include;..\..\..\libs\fmodex\include;..\..\..\libs\videoInput\include;..\..\..\libs\glew\include\;..\..\..\libs\glu\include;..\..\..\libs\poco\include;..\..\..\addons;..\..\..\libs\openFrameworks\gl;..\..\..\libs\openFrameworks\3d;..\..\..\libs\tess2\include;..\..\..\libs\cairo\include\cairo;$(KINECTSDK10_DIR)\inc;..\..\..\addons\ofxKinectNui\src;../../../addons/ofxOpenCv/src;../../../addons/ofxOpenCv/libs/opencv/include/opencv;../../../addons/ofxOpenCv/libs/opencv/include;..\..\..\addons\ofxMSAInteractiveObject\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src;..\..\..\addons\ofxSimpleGuiToo\src;../../../addons/ofxSimpleGuiToo/src/Controls;../../../addons\ofxOsc\libs\oscpack\include\ip;../../../addons\ofxOsc\libs\oscpack\include\osc;../../../addons\ofxOsc\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\libs\openFrameworks;..\..\..\libs\openFrameworks\graphics;..\..\..\libs\openFrameworks\app;..\..\..\libs\openFrameworks\sound;..\..\..\libs\openFrameworks\utils;..\..\..\libs\openFrameworks\communication;..\..\..\libs\openFrameworks\video;..\..\..\libs\openFrameworks\math;..\..\..\libs\openFrameworks\types;..\..\..\libs\openFrameworks\events;..\..\..\libs\glut\include;..\..\..\libs\rtAudio\include;..\..\..\libs\quicktime\include;..\..\..\libs\freetype\include;..\..\..\libs\freetype\include\freetype2;..\..\..\libs\freeImage\include;..\..\..\libs\fmodex\include;..\..\..\libs\videoInput\include;..\..\..\libs\glew\include\;..\..\..\libs\glu\include;..\..\..\libs\poco\include;..\..\..\addons;..\..\..\libs\openFrameworks\gl;..\..\..\libs\openFrameworks\3d;..\..\..\libs\tess2\include;..\..\..\libs\cairo\include\cairo;$(KINECTSDK10_DIR)\inc;..\addons\ofxKinectNui\src;../../../addons/ofxOpenCv/src;../../../addons/ofxOpenCv/libs/opencv/include/opencv;../../../addons/ofxOpenCv/libs/opencv/include;..\addons\ofxMSAInteractiveObject\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src;..\addons\ofxSimpleGuiToo\src;../addons/ofxSimpleGuiToo/src/Controls;..\..\..\addons\ofxNetwork\src;src\lz4</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;POCO_STATIC;CAIRO_WIN32_STATIC_BUILD;DISABLE_SOME_FLOATING_POINT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -234,6 +234,10 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClCompile Include="..\..\..\addons\ofxKinectNui\src\ofxKinectNuiRecorder.cpp" />
     <ClCompile Include="..\..\..\addons\ofxKinectNui\src\win32\Event.cpp" />
     <ClCompile Include="..\..\..\addons\ofxMSAInteractiveObject\src\ofxMSAInteractiveObject.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxNetwork\src\ofxTCPClient.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxNetwork\src\ofxTCPManager.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxNetwork\src\ofxTCPServer.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxNetwork\src\ofxUDPManager.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvColorImage.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvContourFinder.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvFloatImage.cpp" />
@@ -241,10 +245,6 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvHaarFinder.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvImage.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscSender.cpp" />
     <ClCompile Include="..\..\..\addons\ofxSimpleGuiToo\src\Controls\ofxSimpleGuiButton.cpp" />
     <ClCompile Include="..\..\..\addons\ofxSimpleGuiToo\src\Controls\ofxSimpleGuiColorPicker.cpp" />
     <ClCompile Include="..\..\..\addons\ofxSimpleGuiToo\src\Controls\ofxSimpleGuiComboBox.cpp" />
@@ -264,6 +264,8 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp" />
+    <ClCompile Include="src\lz4\lz4.c" />
+    <ClCompile Include="src\lz4\lz4hc.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\testApp.cpp" />
   </ItemGroup>
@@ -281,6 +283,12 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClInclude Include="..\..\..\addons\ofxKinectNui\src\kinect\nui\WaveOutput.h" />
     <ClInclude Include="..\..\..\addons\ofxKinectNui\src\ofxBase3DVideo.h" />
     <ClInclude Include="..\..\..\addons\ofxMSAInteractiveObject\src\ofxMSAInteractiveObject.h" />
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxNetwork.h" />
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxNetworkUtils.h" />
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxTCPClient.h" />
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxTCPManager.h" />
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxTCPServer.h" />
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxUDPManager.h" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvBlob.h" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvColorImage.h" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvConstants.h" />
@@ -292,12 +300,6 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvMain.h" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.h" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxOpenCv.h" />
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOsc.h" />
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscArg.h" />
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.h" />
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.h" />
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.h" />
-    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscSender.h" />
     <ClInclude Include="..\..\..\addons\ofxSimpleGuiToo\src\Controls\ofxSimpleGuiButton.h" />
     <ClInclude Include="..\..\..\addons\ofxSimpleGuiToo\src\Controls\ofxSimpleGuiColorPicker.h" />
     <ClInclude Include="..\..\..\addons\ofxSimpleGuiToo\src\Controls\ofxSimpleGuiComboBox.h" />
@@ -324,6 +326,8 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClInclude Include="..\..\..\addons\ofxKinectNui\src\ofxKinectNuiRecorder.h" />
     <ClInclude Include="..\..\..\addons\ofxKinectNui\src\win32\Event.h" />
     <ClInclude Include="..\src\win32\SpinLock.h" />
+    <ClInclude Include="src\lz4\lz4.h" />
+    <ClInclude Include="src\lz4\lz4hc.h" />
     <ClInclude Include="src\testApp.h" />
   </ItemGroup>
   <ItemGroup>
@@ -427,12 +431,6 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Library>
     <Library Include="..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs2010\zlibd.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\..\..\addons\ofxOsc\libs\oscpack\lib\vs2010\oscpack.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\..\..\addons\ofxOsc\libs\oscpack\lib\vs2010\oscpackd.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </Library>
   </ItemGroup>
