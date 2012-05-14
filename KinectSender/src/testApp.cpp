@@ -21,7 +21,7 @@ void testApp::setup() {
 	char szPath[128] = "";
     gethostname(szPath, sizeof(szPath));
 	string hostname = string(szPath);
-	string destination="192.168.2.255";
+	string destination="192.168.1.103";
 	int port = 12345;
 	cout <<  hostname << " --> " << destination << ":" << port << endl;
 	udpConnection.Create();
@@ -167,7 +167,7 @@ void testApp::sendUDPMessage()
 	if(count > 0)
 	{
 		string m1 = message.str();
-		char dest[5000];
+		char dest[10000];
 		int size = LZ4_compressHC(m1.c_str(), dest, m1.length());
 		udpConnection.Send(m1.c_str(), m1.length());
 	}
