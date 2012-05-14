@@ -21,7 +21,7 @@ void testApp::setup() {
 	char szPath[128] = "";
     gethostname(szPath, sizeof(szPath));
 	string hostname = string(szPath);
-	string destination="192.168.1.103";
+	string destination="192.168.1.106";
 	int port = 12345;
 	cout <<  hostname << " --> " << destination << ":" << port << endl;
 
@@ -33,6 +33,9 @@ void testApp::setup() {
 #ifdef USE_TCP
 	TCP.setup(port);
 	TCP.setMessageDelimiter("\n");
+#endif
+#ifdef USE_OSC
+	sender.setup(destination, port);
 #endif
 
 	//
@@ -84,7 +87,7 @@ void testApp::setup() {
 	gui.addSlider("Far Clipping", farClipping, 2000, 4000);
 	gui.addSlider("Brightness", brightness, -1, 1);
 	gui.addSlider("Contrast", contrast, -1, 1);
-	gui.addSlider("Send Threshold", changeThreshold, 3, 100); // pixels under this threshold aren't considered "changed"
+	gui.addSlider("Change Threshold", changeThreshold, 1, 20); // pixels under this threshold aren't considered "changed"
 	//gui.addSlider("Min Cells Change", minCellsChangedToSend, 1, 40); // don't send messages with less than x changed cells
 	gui.addSlider("Right Crop", rightCrop, 0, 100);
 	gui.addSlider("Left Crop", leftCrop, 0, 100);
@@ -110,7 +113,46 @@ void testApp::update() {
 		grayFrame.brightnessContrast(brightness, contrast);
 		grayPixels = grayFrame.getPixelsRef();
 
-		sendUDPMessage();
+		// Populate the cells
+		for(int y=0; y < GRID_HEIGHT; y++)
+		{
+			for(int x=0; x < GRID_WIDTH; x++)
+			{
+				int i = y * GRID_WIDTH + x;
+				assert(i<NUM_CELLS);
+
+				// Where should we look in the 320x240 images for the depth and brightness values?
+				ofPoint samplePos;
+				samplePos.x = ofMap(x, 0, GRID_WIDTH, leftCrop,  kinect.getDepthResolutionWidth()-rightCrop);
+				samplePos.y = ofMap(y, 0, GRID_HEIGHT, 0,  kinect.getDepthResolutionHeight());
+
+				// Get depth and alpha values (for testing whether we want this pixel)
+				int depth =  kinect.getDistanceAt(samplePos);
+				int a =  kinect.getLabelPixels().getColor(samplePos.x, samplePos.y).a;
+
+
+				// Determine the brightness for cells[i]
+				int bri;
+				if(a == 0) {
+					bri = 0;
+				} else {
+					int gray_x = ofClamp(samplePos.x+videoOffset.x, 0, grayPixels.getWidth());
+					int gray_y = ofClamp(samplePos.y+videoOffset.y, 0, grayPixels.getHeight());
+					bri = grayPixels.getColor(gray_x, gray_y).getBrightness();
+				}
+			
+				// If it passes the tests, draw/send it
+				int diff = abs(bri - cells[i]);
+				if(diff != 0) {
+					message  << i << "=" << bri << "&";
+					cells[i] = bri;
+				}
+				
+				if(message.str().length() > 400) {
+					sendMessage();
+				}
+			}
+		}
 	}
 
 	// Update the kinect values
@@ -126,67 +168,37 @@ void testApp::update() {
 }
 
 //--------------------------------------------------------------
-void testApp::sendUDPMessage()
+void testApp::sendMessage()
 {
-	int count=0;
-	stringstream message;
-	for(int y=0; y < GRID_HEIGHT; y++)
-	{
-		for(int x=0; x < GRID_WIDTH; x++)
-		{
-			int i = y * GRID_WIDTH + x;
-			assert(i<NUM_CELLS);
-
-			// Where should we look in the 320x240 images for the depth and brightness values?
-			ofPoint samplePos;
-			samplePos.x = ofMap(x, 0, GRID_WIDTH, leftCrop,  kinect.getDepthResolutionWidth()-rightCrop);
-			samplePos.y = ofMap(y, 0, GRID_HEIGHT, 0,  kinect.getDepthResolutionHeight());
-
-			// Get depth and alpha values (for testing whether we want this pixel)
-			int depth =  kinect.getDistanceAt(samplePos);
-			int a =  kinect.getLabelPixels().getColor(samplePos.x, samplePos.y).a;
-
-
-			// Determine the brightness for cells[i]
-			int bri;
-			if(a == 0) {
-				bri = 0;
-			} else {
-				int gray_x = ofClamp(samplePos.x+videoOffset.x, 0, grayPixels.getWidth());
-				int gray_y = ofClamp(samplePos.y+videoOffset.y, 0, grayPixels.getHeight());
-				bri = grayPixels.getColor(gray_x, gray_y).getBrightness();
-			}
-			
-			// If it passes the tests, draw/send it
-			int diff = abs(bri - cells[i]);
-			if(diff > changeThreshold)
-			{
-				count++;
-				message  << i << "=" << bri << "&";
-				cells[i] = bri;
-			}
-		}
-	}
-
-
-
-	if(count > 0)
-	{
-		string m1 = message.str();
-		char dest[10000];
-		int size = LZ4_compressHC(m1.c_str(), dest, m1.length());
-		string compressed = dest; 
+	// Compress the stringstream
+	string uncompressed = message.str();
+	char dest[10000];
+	int size = LZ4_compressHC(uncompressed.c_str(), dest, uncompressed.length());
+	string compressed = dest; 
+	
 
 #ifdef USE_UDP
-		udpConnection.Send(compressed.c_str(), compressed.length());
+	udpConnection.Send(compressed.c_str(), compressed.length());
 #endif
+
 #ifdef USE_TCP
 	for(int i = 0; i < TCP.getLastID(); i++) {
 		if( !TCP.isClientConnected(i) )continue;
-		TCP.send(i, compressed);
+		TCP.send(i, "p1:"+message.str());
+		TCP.send(i, "p2:"+message.str());
 	}
 #endif
-	}
+
+#ifdef USE_OSC
+	ofxOscMessage m;
+	m.setAddress("/p1");
+	m.addStringArg( uncompressed );
+	sender.sendMessage( m );
+
+	m.setAddress("/p2");
+	sender.sendMessage( m );
+#endif	
+	message.str("");
 }
 
 //--------------------------------------------------------------

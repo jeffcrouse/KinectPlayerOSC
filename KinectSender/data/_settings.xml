@@ -13,16 +13,16 @@
     </SliderFloat_Far_Clipping>
     <SliderFloat_Brightness>
         <name>Brightness</name>
-        <value>1.000000</value>
+        <value>0.290000</value>
     </SliderFloat_Brightness>
     <SliderFloat_Contrast>
         <name>Contrast</name>
-        <value>0.330000</value>
+        <value>0.140000</value>
     </SliderFloat_Contrast>
-    <SliderInt_Send_Threshold>
-        <name>Send Threshold</name>
-        <value>37</value>
-    </SliderInt_Send_Threshold>
+    <SliderInt_Change_Threshold>
+        <name>Change Threshold</name>
+        <value>15</value>
+    </SliderInt_Change_Threshold>
     <SliderInt_Right_Crop>
         <name>Right Crop</name>
         <value>16</value>
