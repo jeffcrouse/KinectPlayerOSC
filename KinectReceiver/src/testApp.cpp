@@ -5,12 +5,21 @@ void testApp::setup(){
 	//we run at 60 fps!
 	ofSetVerticalSync(true);
 	ofSetFrameRate(60);
-
+    
+    int port = 12345;
+    
+#ifdef USE_UDP
     //create the socket and bind to port 11999
 	udpConnection.Create();
-	udpConnection.Bind(12345);
+	udpConnection.Bind(port);
 	udpConnection.SetNonBlocking(true);
-
+#endif
+#ifdef USE_TCP
+    bool  weConnected = tcpClient.setup("192.168.1.105", port);
+	tcpClient.setMessageDelimiter("\n");
+    tcpClient.setVerbose(true);
+#endif
+    
 	//
 	// Initialize the cells
 	//
@@ -26,18 +35,30 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
 
-	char udpMessageCompressed[7000];
-	int size = udpConnection.Receive(udpMessageCompressed, 7000);
-    string message = udpMessageCompressed;
-
+    string message;
+    int size;
+   
+    
+    
+#ifdef USE_UDP
+     char messageCompressed[7000];
+	size = udpConnection.Receive(messageCompressed, 7000);
+    message = messageCompressed;
+#endif
+    
+    
+#ifdef USE_TCP
+    message = tcpClient.receive();
+#endif
+    
 	if(message!="")
 	{
-        char udpMessageUncompressed[7000];
-        size = LZ4_uncompress(udpMessageCompressed, udpMessageUncompressed, 7000);
-        message = udpMessageUncompressed;
+        char messageUncompressed[7000];
+        size = LZ4_uncompress(message.c_str(), messageUncompressed, 7000);
+        message = messageUncompressed;
         cout << message << endl;
 
-        
+        /*
 		vector<string> updates = ofSplitString(message, "&", true, true);
 		for(int i=0; i<updates.size(); i++)
 		{
@@ -47,6 +68,7 @@ void testApp::update(){
 			p1[index] = bri;
 			p2[index] = bri;
 		}
+       */
 	}
 
 
