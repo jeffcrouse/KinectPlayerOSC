@@ -138,6 +138,18 @@
     <ClCompile Include="..\addons\ofxKinectNui\src\win32\Event.cpp">
       <Filter>addons\ofxKinectNui\src\win32</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.cpp">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.cpp">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscSender.cpp">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\testApp.h" />
@@ -318,6 +330,24 @@
     <ClInclude Include="..\addons\ofxKinectNui\src\win32\SpinLock.h">
       <Filter>addons\ofxKinectNui\src\win32</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscArg.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscSender.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOsc.h">
+      <Filter>addons\ofxOSC\src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="addons">
@@ -370,6 +400,15 @@
     </Filter>
     <Filter Include="lz4">
       <UniqueIdentifier>{e7a12065-bdbe-431e-b247-13f68bf6ddb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOSC">
+      <UniqueIdentifier>{f9a984c3-3abf-4f81-aa29-1f55475a297d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOSC\src">
+      <UniqueIdentifier>{dbddbc20-d555-46af-94c9-ee1a8e8a4fe5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOSC\libs">
+      <UniqueIdentifier>{02e59fc2-711a-48f9-99f2-7a016217f23a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -468,6 +507,12 @@
     </Library>
     <Library Include="..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs2010\opencv_lapack.lib">
       <Filter>addons\ofxOpenCV\libs</Filter>
+    </Library>
+    <Library Include="..\..\..\addons\ofxOsc\libs\oscpack\lib\vs2010\oscpackd.lib">
+      <Filter>addons\ofxOSC\libs</Filter>
+    </Library>
+    <Library Include="..\..\..\addons\ofxOsc\libs\oscpack\lib\vs2010\oscpack.lib">
+      <Filter>addons\ofxOSC\libs</Filter>
     </Library>
   </ItemGroup>
 </Project>

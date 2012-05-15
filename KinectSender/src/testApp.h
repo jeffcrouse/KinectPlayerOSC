@@ -17,6 +17,7 @@
 #include "ofMain.h"
 #include "ofxOpenCV.h"
 #include "ofxSimpleGuiToo.h"
+#include "ofxOsc.h"
 #ifdef _WIN32
 #include <io.h>			// _setmode
 #include <fcntl.h>		// _O_BINARY
@@ -29,7 +30,7 @@
 
 #define SCREEN_WIDTH 256
 #define SCREEN_HEIGHT 256
-#define CELL_SIZE 4
+#define CELL_SIZE 6
 #define GRID_WIDTH (SCREEN_WIDTH)/(CELL_SIZE)
 #define GRID_HEIGHT (SCREEN_HEIGHT)/(CELL_SIZE)
 #define NUM_CELLS GRID_WIDTH*GRID_HEIGHT
@@ -41,7 +42,7 @@ class testApp : public ofBaseApp {
 
 		void setup();
 		void update();
-		void sendUDPMessage();
+		void sendMessage();
 		void draw();
 		void exit();
 
@@ -57,6 +58,7 @@ class testApp : public ofBaseApp {
 		ofxKinectNui kinect;
 		int cells[NUM_CELLS];
 		ofFbo render;
+		stringstream message;
 
 #ifdef USE_UDP
 		ofxUDPManager udpConnection;
@@ -64,7 +66,9 @@ class testApp : public ofBaseApp {
 #ifdef USE_TCP
 		ofxTCPServer TCP;
 #endif
-
+#ifdef USE_OSC
+		ofxOscSender sender;
+#endif
 		bool bPlugged;
 		bool bUnplugged;
 
