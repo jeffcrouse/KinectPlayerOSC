@@ -30,8 +30,12 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);		
 
         ofxOscReceiver	receiver;
-
+       
         int p1[NUM_CELLS];
 		int p2[NUM_CELLS];
+    
+    // for playback
+        bool bPlaying;
+        ofBuffer datafile;
 };
 

@@ -4,7 +4,7 @@
 void testApp::setup(){
 	//we run at 60 fps!
 	ofSetVerticalSync(true);
-	ofSetFrameRate(60);
+	ofSetFrameRate(30);
     
     cout << "SCREEN_WIDTH: " << SCREEN_WIDTH << endl;
     cout << "SCREEN_HEIGHT: " << SCREEN_HEIGHT << endl;
@@ -18,6 +18,9 @@ void testApp::setup(){
     receiver.setup( port );
 
     
+    bPlaying = false;
+    
+    
 	//
 	// Initialize the cells
 	//
@@ -30,6 +33,22 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
 
+    if(bPlaying) 
+    {
+        string line = datafile.getNextLine();
+        if(line!="")
+        {
+            vector<string> updates = ofSplitString(line, ",", true, true);
+            for(int i=0; i<updates.size(); i++)
+            {
+                int packed = ofToInt(updates[i]);
+                int n = packed >> 8;
+                p1[n] = packed & 0x0000FF;
+                p2[n] = p1[n];
+            }
+        }
+    }
+    
     while( receiver.hasWaitingMessages() )
 	{
 		ofxOscMessage m;
@@ -74,6 +93,8 @@ void testApp::draw(){
 		ofRect((x+GRID_WIDTH)*size, y*size, size, size);
 	}
 
+    ofSetColor(255);
+    ofDrawBitmapString("fps: "+ofToString(ofGetFrameRate()), 10, 20);
 }
 
 //--------------------------------------------------------------
@@ -84,6 +105,19 @@ void testApp::keyPressed(int key){
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
 
+    switch(key) {
+        case 'o':
+        case 'O': {
+            ofFileDialogResult result = ofSystemLoadDialog();
+            datafile = ofBufferFromFile(result.getPath());
+            datafile.resetLineReader();
+            bPlaying = true;
+        } break;
+        case 'c':
+        case 'C':
+            
+            break;
+    }
 }
 
 //--------------------------------------------------------------
