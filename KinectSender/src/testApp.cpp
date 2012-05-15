@@ -25,18 +25,7 @@ void testApp::setup() {
 	int port = 12345;
 	cout <<  hostname << " --> " << destination << ":" << port << endl;
 
-#ifdef USE_UDP
-	udpConnection.Create();
-	udpConnection.Connect(destination.c_str(), port);
-	udpConnection.SetNonBlocking(true);
-#endif
-#ifdef USE_TCP
-	TCP.setup(port);
-	//TCP.setMessageDelimiter("\n");
-#endif
-#ifdef USE_OSC
 	sender.setup(destination, port);
-#endif
 
 	//
 	// Set up Kinect camera
@@ -103,24 +92,7 @@ void testApp::setup() {
 
 //--------------------------------------------------------------
 void testApp::update() {
-	/*
-	if(ofGetElapsedTimef()-lastSend > 1)
-	{
-		string uncompressed = "The time is now "+ofGetTimestampString(); //message.str();
-		cout << uncompressed << endl;
 
-
-		char compressed[10000];
-		int size = LZ4_compressHC(uncompressed.c_str(), compressed, uncompressed.length());
-		
-		for(int i = 0; i <TCP.getLastID(); i++) 
-		{
-			if( !TCP.isClientConnected(i) )continue;
-			TCP.send(i, string(compressed)+"[/TCP]");
-		}
-		lastSend = ofGetElapsedTimef();
-	}
-	*/
 	kinect.update();
 
 	if(kinect.isFrameNew())
@@ -160,8 +132,10 @@ void testApp::update() {
 			
 				// If it passes the tests, draw/send it
 				int diff = abs(bri - cells[i]);
-				if(diff != changeThreshold) {
-					message  << i << "=" << bri << "&";
+				if(diff > changeThreshold)
+				{
+					int packed = (i << 8) | bri;			
+					message  << packed << ",";
 					cells[i] = bri;
 				}
 				
@@ -187,31 +161,6 @@ void testApp::update() {
 //--------------------------------------------------------------
 void testApp::sendMessage()
 {
-	// Compress the stringstream
-	char compressed[10000];
-	//cout << "message length: " << message.str().length() << endl;
-	int size = LZ4_compress(message.str().c_str(), compressed, message.str().length());
-	//cout << "size: " << size << endl;
-	//cout << "before terminator: " << compressed << endl;
-	compressed[size] = '\0';
-
-#ifdef USE_UDP
-	udpConnection.Send(compressed.c_str(), compressed.length());
-#endif
-
-#ifdef USE_TCP
-	strcat(compressed, "[/TCP]");
-	//cout << "after terminator: " << compressed << endl;
-
-	string tcp = message.str()+"[/TCP]";
-	for(int i = 0; i <TCP.getLastID(); i++) 
-	{
-		if( !TCP.isClientConnected(i) ) continue;
-		TCP.sendRawBytes(i, tcp.c_str(), tcp.length());
-	}
-#endif
-
-#ifdef USE_OSC
 	ofxOscMessage m;
 	m.setAddress("/p1");
 	m.addStringArg( message.str() );
@@ -219,8 +168,6 @@ void testApp::sendMessage()
 
 	m.setAddress("/p2");
 	sender.sendMessage( m );
-#endif	
-
 
 	message.str("");
 }

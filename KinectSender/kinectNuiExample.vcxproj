@@ -269,8 +269,6 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClCompile Include="..\addons\ofxSimpleGuiToo\src\ofxSimpleGuiPage.cpp" />
     <ClCompile Include="..\addons\ofxSimpleGuiToo\src\ofxSimpleGuiToo.cpp" />
     <ClCompile Include="..\addons\ofxSimpleGuiToo\src\ofxSimpleGuiValueControl.cpp" />
-    <ClCompile Include="src\lz4\lz4.c" />
-    <ClCompile Include="src\lz4\lz4hc.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\testApp.cpp" />
   </ItemGroup>
@@ -338,8 +336,6 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClInclude Include="..\addons\ofxSimpleGuiToo\src\ofxSimpleGuiPage.h" />
     <ClInclude Include="..\addons\ofxSimpleGuiToo\src\ofxSimpleGuiToo.h" />
     <ClInclude Include="..\addons\ofxSimpleGuiToo\src\ofxSimpleGuiValueControl.h" />
-    <ClInclude Include="src\lz4\lz4.h" />
-    <ClInclude Include="src\lz4\lz4hc.h" />
     <ClInclude Include="src\testApp.h" />
   </ItemGroup>
   <ItemGroup>

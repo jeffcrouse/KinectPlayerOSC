@@ -21,7 +21,7 @@
     </SliderFloat_Contrast>
     <SliderInt_Change_Threshold>
         <name>Change Threshold</name>
-        <value>15</value>
+        <value>1</value>
     </SliderInt_Change_Threshold>
     <SliderInt_Right_Crop>
         <name>Right Crop</name>
