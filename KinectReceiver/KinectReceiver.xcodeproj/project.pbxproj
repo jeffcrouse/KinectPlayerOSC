@@ -16,8 +16,6 @@
 		1FB86A6E15607E5600FE322E /* ofxTCPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB86A6715607E5600FE322E /* ofxTCPManager.cpp */; };
 		1FB86A6F15607E5600FE322E /* ofxTCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB86A6915607E5600FE322E /* ofxTCPServer.cpp */; };
 		1FB86A7015607E5600FE322E /* ofxUDPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB86A6B15607E5600FE322E /* ofxUDPManager.cpp */; };
-		1FB86A7E15607E7D00FE322E /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 1FB86A7615607E7D00FE322E /* lz4.c */; };
-		1FB86A8015607E7D00FE322E /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1FB86A7A15607E7D00FE322E /* lz4hc.c */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -103,10 +101,6 @@
 		1FB86A6A15607E5600FE322E /* ofxTCPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTCPServer.h; sourceTree = "<group>"; };
 		1FB86A6B15607E5600FE322E /* ofxUDPManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUDPManager.cpp; sourceTree = "<group>"; };
 		1FB86A6C15607E5600FE322E /* ofxUDPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUDPManager.h; sourceTree = "<group>"; };
-		1FB86A7615607E7D00FE322E /* lz4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4.c; sourceTree = "<group>"; };
-		1FB86A7715607E7D00FE322E /* lz4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lz4.h; sourceTree = "<group>"; };
-		1FB86A7A15607E7D00FE322E /* lz4hc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4hc.c; sourceTree = "<group>"; };
-		1FB86A7B15607E7D00FE322E /* lz4hc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lz4hc.h; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -279,17 +273,6 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		1FB86A7115607E7D00FE322E /* lz4 */ = {
-			isa = PBXGroup;
-			children = (
-				1FB86A7615607E7D00FE322E /* lz4.c */,
-				1FB86A7715607E7D00FE322E /* lz4.h */,
-				1FB86A7A15607E7D00FE322E /* lz4hc.c */,
-				1FB86A7B15607E7D00FE322E /* lz4hc.h */,
-			);
-			path = lz4;
-			sourceTree = "<group>";
-		};
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
@@ -359,7 +342,6 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				1FB86A7115607E7D00FE322E /* lz4 */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
@@ -466,8 +448,6 @@
 				1FB86A6E15607E5600FE322E /* ofxTCPManager.cpp in Sources */,
 				1FB86A6F15607E5600FE322E /* ofxTCPServer.cpp in Sources */,
 				1FB86A7015607E5600FE322E /* ofxUDPManager.cpp in Sources */,
-				1FB86A7E15607E7D00FE322E /* lz4.c in Sources */,
-				1FB86A8015607E7D00FE322E /* lz4hc.c in Sources */,
 				1F816A9E1561405200AB6E8D /* ofxOscBundle.cpp in Sources */,
 				1F816A9F1561405200AB6E8D /* ofxOscMessage.cpp in Sources */,
 				1F816AA01561405200AB6E8D /* ofxOscReceiver.cpp in Sources */,
