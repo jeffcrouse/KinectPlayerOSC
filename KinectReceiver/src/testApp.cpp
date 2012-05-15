@@ -5,7 +5,7 @@ void testApp::setup(){
 	//we run at 60 fps!
 	ofSetVerticalSync(true);
 	ofSetFrameRate(60);
-    
+
     int port = 12345;
     
 #ifdef USE_UDP
@@ -15,8 +15,8 @@ void testApp::setup(){
 	udpConnection.SetNonBlocking(true);
 #endif
 #ifdef USE_TCP
-    bool  weConnected = tcpClient.setup("192.168.1.105", port);
-	tcpClient.setMessageDelimiter("\n");
+    bool  weConnected = tcpClient.setup("192.168.1.107", port);
+	//tcpClient.setMessageDelimiter("\n");
     tcpClient.setVerbose(true);
 #endif
 #ifdef USE_OSC
@@ -38,10 +38,6 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
 
-    string message;
-    string m1, m2;
-    int size;
-    
 #ifdef USE_UDP
     char compressed[7000];
 	size = udpConnection.Receive(compressed, 7000);
@@ -50,7 +46,23 @@ void testApp::update(){
     
     
 #ifdef USE_TCP
-    message = tcpClient.receive();
+    
+    tcpClient.receiveRawBytes(<#char *receiveBytes#>, <#int numBytes#>)
+    string message = tcpClient.receive();
+    if(message.length()>0)
+    {
+        char uncompressed[10000];
+        int size = LZ4_uncompress_unknownOutputSize(message.c_str(), uncompressed, message.length(), 10000);
+        if(size>0)
+        {
+
+            string out;
+            out.assign(uncompressed, size);
+
+        }
+
+    }
+    /*
     if(message != "")
     {
         vector<string> player = ofSplitString(message, ":", true, true);
@@ -61,6 +73,7 @@ void testApp::update(){
             m2 = player[1];
         }
     }
+     */
 #endif
  
 #ifdef USE_OSC
@@ -70,39 +83,45 @@ void testApp::update(){
 		receiver.getNextMessage( &m );
         if(m.getAddress()=="/p1")
         {
-            //string compressed = m.getArgAsString(0);
-            //char uncompressed[10000];
-            //size = LZ4_uncompress_unknownOutputSize(compressed.c_str(), uncompressed, compressed.length(), 10000);
-            
-            m1 += " | " +  m.getArgAsString(0);
+            vector<string> updates = ofSplitString(m.getArgAsString(0), "&", false, false);
+            for(int i=0; i<updates.size(); i++)
+            {
+                vector<string> cell = ofSplitString(updates[i], "=", false, false);
+                if(cell.size()>0) {
+                    int index = ofToInt( cell[0] );
+                    int bri = 0;
+                    if(cell.size()>1) {
+                        bri = ofToInt( cell[1] );
+                    }
+                    p1[index] = bri;
+                }
+            }
         }
         
         if(m.getAddress()=="/p2")
         {
-            //string compressed = m.getArgAsString(0);
-            //char uncompressed[10000];
-            //size = LZ4_uncompress_unknownOutputSize(compressed.c_str(), uncompressed, compressed.length(), 10000);
-            
-            m2 += " | " +  m.getArgAsString(0);
+            vector<string> updates = ofSplitString(m.getArgAsString(0), "&", false, false);
+            for(int i=0; i<updates.size(); i++)
+            {
+                vector<string> cell = ofSplitString(updates[i], "=", false, false);
+                if(cell.size()>0) {
+                    int index = ofToInt( cell[0] );
+                    int bri = 0;
+                    if(cell.size()>1) {
+                        bri = ofToInt( cell[1] );
+                    }
+                    p2[index] = bri;
+                }
+            }
         }
+        
     }
 #endif
     
+    /*
 	if(m1!="")
 	{
-		vector<string> updates = ofSplitString(m1, "&", false, false);
-		for(int i=0; i<updates.size(); i++)
-		{
-			vector<string> cell = ofSplitString(updates[i], "=", false, false);
-            if(cell.size()>0) {
-                int index = ofToInt( cell[0] );
-                int bri = 0;
-                if(cell.size()>1) {
-                    bri = ofToInt( cell[1] );
-                }
-                p1[index] = bri;
-            }
-		}
+
 	}
 
     
@@ -119,7 +138,7 @@ void testApp::update(){
 		}
 	}
 
-
+     */
 }
 
 //--------------------------------------------------------------
