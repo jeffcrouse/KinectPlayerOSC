@@ -21,7 +21,7 @@
 
 #define SCREEN_WIDTH 256
 #define SCREEN_HEIGHT 256
-#define CELL_SIZE 4
+#define CELL_SIZE 2
 #define GRID_WIDTH (SCREEN_WIDTH)/(CELL_SIZE)
 #define GRID_HEIGHT (SCREEN_HEIGHT)/(CELL_SIZE)
 #define NUM_CELLS GRID_WIDTH*GRID_HEIGHT
@@ -54,6 +54,8 @@ class testApp : public ofBaseApp {
 
 		bool bPlugged;
 		bool bUnplugged;
+		bool bRecording;
+		ofFile outfile;
 
 		int kinectAngle;
 		float nearClipping;

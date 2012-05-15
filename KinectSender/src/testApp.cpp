@@ -50,6 +50,9 @@ void testApp::setup() {
 	nearClipping = kinect.getNearClippingDistance();
 	farClipping = kinect.getFarClippingDistance();
 
+
+	bRecording = false;
+
 	//
 	// Allocate the textures
 	//
@@ -146,6 +149,10 @@ void testApp::update() {
 		}
 	}
 
+	if(bRecording) {
+		outfile << "\n";
+	}
+
 	// Update the kinect values
 	if(kinectAngle != kinect.getCurrentAngle()) 
 		kinect.setAngle( kinectAngle );
@@ -161,6 +168,10 @@ void testApp::update() {
 //--------------------------------------------------------------
 void testApp::sendMessage()
 {
+	if(bRecording) {
+		outfile << message.str() + "\n";
+	}
+
 	ofxOscMessage m;
 	m.setAddress("/p1");
 	m.addStringArg( message.str() );
@@ -217,6 +228,22 @@ void testApp::keyPressed (int key) {
 	case 'c': // close stream
 	case 'C':
 		kinect.close();
+		break;
+	case 'r':
+	case 'R':
+		if(bRecording)
+		{
+			outfile.close();
+			bRecording = false;
+		} 
+		else 
+		{
+			string defaultName = ofGetTimestampString()+".dat";
+			string message = "Choose a save location";
+			ofFileDialogResult result = ofSystemSaveDialog(defaultName, message);
+			outfile.open(result.getPath(), ofFile::WriteOnly);
+			bRecording = true;
+		}
 		break;
 	case OF_KEY_RIGHT:
 		videoOffset.x++;
