@@ -5,11 +5,11 @@
     </SliderInt_Angle>
     <SliderFloat_Near_Clipping>
         <name>Near Clipping</name>
-        <value>844.000000</value>
+        <value>800.000000</value>
     </SliderFloat_Near_Clipping>
     <SliderFloat_Far_Clipping>
         <name>Far Clipping</name>
-        <value>4000.000000</value>
+        <value>3490.000000</value>
     </SliderFloat_Far_Clipping>
     <SliderFloat_Brightness>
         <name>Brightness</name>
@@ -17,18 +17,18 @@
     </SliderFloat_Brightness>
     <SliderFloat_Contrast>
         <name>Contrast</name>
-        <value>0.140000</value>
+        <value>0.420000</value>
     </SliderFloat_Contrast>
     <SliderInt_Change_Threshold>
         <name>Change Threshold</name>
-        <value>1</value>
+        <value>5</value>
     </SliderInt_Change_Threshold>
     <SliderInt_Right_Crop>
         <name>Right Crop</name>
-        <value>16</value>
+        <value>23</value>
     </SliderInt_Right_Crop>
     <SliderInt_Left_Crop>
         <name>Left Crop</name>
-        <value>16</value>
+        <value>36</value>
     </SliderInt_Left_Crop>
 </controls>

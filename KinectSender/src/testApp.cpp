@@ -161,6 +161,8 @@ void testApp::update() {
 //--------------------------------------------------------------
 void testApp::sendMessage()
 {
+	//cout << message.str() << endl;
+
 	ofxOscMessage m;
 	m.setAddress("/p1");
 	m.addStringArg( message.str() );
