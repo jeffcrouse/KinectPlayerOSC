@@ -2,9 +2,6 @@
 
 #include "ofMain.h"
 #include "ofxOsc.h"
-#include "ofxNetwork.h"
-#include "lz4.h"
-#include "lz4hc.h"
 
 #define SCREEN_WIDTH 256
 #define SCREEN_HEIGHT 256
@@ -13,7 +10,6 @@
 #define GRID_HEIGHT (SCREEN_HEIGHT)/(CELL_SIZE)
 #define NUM_CELLS GRID_WIDTH*GRID_HEIGHT
 
-#define USE_OSC
 
 class testApp : public ofBaseApp{
 
@@ -33,17 +29,9 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);		
 
-#ifdef USE_UDP
-		ofxUDPManager udpConnection;
-#endif
-#ifdef USE_TCP
-        ofxTCPClient tcpClient;
-#endif
-#ifdef USE_OSC
         ofxOscReceiver	receiver;
-#endif
-    
-		int p1[NUM_CELLS];
+
+        int p1[NUM_CELLS];
 		int p2[NUM_CELLS];
 };
 
