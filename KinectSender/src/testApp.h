@@ -30,12 +30,12 @@
 
 #define SCREEN_WIDTH 256
 #define SCREEN_HEIGHT 256
-#define CELL_SIZE 6
+#define CELL_SIZE 4
 #define GRID_WIDTH (SCREEN_WIDTH)/(CELL_SIZE)
 #define GRID_HEIGHT (SCREEN_HEIGHT)/(CELL_SIZE)
 #define NUM_CELLS GRID_WIDTH*GRID_HEIGHT
 
-#define USE_TCP
+#define USE_OSC
 
 class testApp : public ofBaseApp {
 	public:
@@ -79,7 +79,7 @@ class testApp : public ofBaseApp {
 		ofPoint videoOffset;
 		int changeThreshold; 
 		int leftCrop, rightCrop;
-		float timeSinceLastSend;
+		float lastSend;
 
 		ofxCvColorImage colorFrame;
 		ofxCvGrayscaleImage grayFrame;
