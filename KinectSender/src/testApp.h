@@ -54,6 +54,8 @@ class testApp : public ofBaseApp {
 
 		bool bPlugged;
 		bool bUnplugged;
+		bool bRecording;
+		ofFile outfile;
 
 		int kinectAngle;
 		float nearClipping;
