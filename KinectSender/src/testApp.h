@@ -17,7 +17,7 @@
 #include "ofxOpenCV.h"
 #include "ofxSimpleGuiToo.h"
 #include "ofxOsc.h"
-
+#include "ofxXmlSettings.h"
 
 #define SCREEN_WIDTH 256
 #define SCREEN_HEIGHT 256
@@ -44,11 +44,14 @@ class testApp : public ofBaseApp {
 		void kinectPlugged();
 		void kinectUnplugged();
 
+
+		ofxXmlSettings oscSettings;
 		ofxKinectNui kinect;
 		int cells[NUM_CELLS];
 		ofFbo render;
+		string messageAddress;
 		stringstream message;
-
+		
 
 		ofxOscSender sender;
 
@@ -57,7 +60,7 @@ class testApp : public ofBaseApp {
 		bool bRecording;
 		ofFile outfile;
 
-		int kinectAngle;
+		int cameraAngle, newCameraAngle;
 		float nearClipping;
 		float farClipping;
 		float brightness, contrast;

@@ -15,17 +15,45 @@ void testApp::setup() {
 	cout << "NUM_CELLS: " << NUM_CELLS  << endl;
 
 
+
+	//
+	// Get the OSC port and destination from the settings file
+	//
+	if(!oscSettings.loadFile("mySettings.xml")) {
+		ofLog(OF_LOG_ERROR, "Couldn't load settings file!");
+	}
+	oscSettings.pushTag("osc");
+	string destination=oscSettings.getValue("destination", "localhost");
+	int port = oscSettings.getValue("port", 12345);
+
+
 	//
 	// Set up sender
 	//
+	cout <<  hostname << " --> " << destination << ":" << port << endl;
+	sender.setup(destination, port);
+	
+	
+	
+	//
+	// Decide what the address of the OSC message will be
+	//
+	// get the hostname of the computer
 	char szPath[128] = "";
     gethostname(szPath, sizeof(szPath));
 	string hostname = string(szPath);
-	string destination="169.254.249.190";
-	int port = 12345;
-	cout <<  hostname << " --> " << destination << ":" << port << endl;
+	messageAddress="player";
+	for(int i=0; i<oscSettings.getNumTags("sender"); i++)
+	{
+		oscSettings.pushTag("sender", i);
+		if(oscSettings.getValue("hostname", "none") == hostname)
+			messageAddress = oscSettings.getValue("msgAddress", "p1");
+		oscSettings.popTag();
+	}
+	cout << "OSC message address: " << messageAddress << endl;
+	
 
-	sender.setup(destination, port);
+
 
 	//
 	// Set up Kinect camera
@@ -45,7 +73,7 @@ void testApp::setup() {
 	kinect.init(grabVideo, grabDepth, grabAudio, grabLabel, grabSkeleton, grabCalibratedVideo, grabLabelCv, useTexture, videoResolution, depthResolution);
 	kinect.open(nearmode);
 	kinect.addKinectListener(this, &testApp::kinectPlugged, &testApp::kinectUnplugged);
-	kinectAngle = kinect.getCurrentAngle();
+	cameraAngle = kinect.getCurrentAngle();
 	bPlugged = kinect.isConnected();
 	nearClipping = kinect.getNearClippingDistance();
 	farClipping = kinect.getFarClippingDistance();
@@ -74,7 +102,7 @@ void testApp::setup() {
 	// Set up GUI
 	//
 	gui.addTitle("All Controls");
-	gui.addSlider("Angle", kinectAngle, -27, 27); 
+	gui.addSlider("Angle", newCameraAngle, -27, 27); 
 	gui.addSlider("Near Clipping", nearClipping, 800, 1000);
 	gui.addSlider("Far Clipping", farClipping, 2000, 4000);
 	gui.addSlider("Brightness", brightness, -1, 1);
@@ -154,8 +182,11 @@ void testApp::update() {
 	}
 
 	// Update the kinect values
-	//if(kinectAngle != kinect.getCurrentAngle()) 
-		//kinect.setAngle( kinectAngle );
+	if(cameraAngle != newCameraAngle) 
+	{
+		kinect.setAngle( newCameraAngle );
+		cameraAngle = newCameraAngle;
+	}
 	
 	if(nearClipping != kinect.getNearClippingDistance()) 
 		kinect.setNearClippingDistance( nearClipping );
@@ -173,13 +204,9 @@ void testApp::sendMessage()
 	}
 
 	ofxOscMessage m;
-	m.setAddress("/p1");
+	m.setAddress(messageAddress);
 	m.addStringArg( message.str() );
 	sender.sendMessage( m );
-
-	m.setAddress("/p2");
-	sender.sendMessage( m );
-
 	message.str("");
 }
 

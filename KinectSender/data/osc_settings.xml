@@ -1,0 +1,12 @@
+<osc>
+	<destination>169.254.249.190<destination>
+	<port>12345</port>
+	<sender>
+		<hostname>HushGame1-HP</hostname>
+		<msgAddress>p1</msgAddress>
+	</sender>
+	<sender>
+		<hostname>HushGame2-HP</hostname>
+		<msgAddress>p2</msgAddress>
+	</sender>
+</osc>

@@ -80,17 +80,23 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 
-    int size=4;
+    int size=8;
 	for(int y=0; y < GRID_HEIGHT; y++)
 	for(int x=0; x < GRID_WIDTH; x++)
 	{
 		int i = y * GRID_WIDTH + x;
         
-		ofSetColor( p1[i], p1[i], p1[i] );
-		ofRect(x*size, y*size, size, size);
-
-		ofSetColor( p2[i], p2[i], p2[i] );
-		ofRect((x+GRID_WIDTH)*size, y*size, size, size);
+        if(p1[i]!=0)
+        {
+            ofSetColor( p1[i], p1[i], p1[i] );
+            ofRect(x*size, y*size, size, size);
+        }
+        
+        if(p2[i]!=0)
+        {
+            ofSetColor( p2[i], p2[i], p2[i] );
+            ofRect((x+GRID_WIDTH)*size, y*size, size, size);
+        }
 	}
 
     ofSetColor(255);
