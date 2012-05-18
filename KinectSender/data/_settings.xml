@@ -13,11 +13,11 @@
     </SliderFloat_Far_Clipping>
     <SliderFloat_Brightness>
         <name>Brightness</name>
-        <value>0.290000</value>
+        <value>1.000000</value>
     </SliderFloat_Brightness>
     <SliderFloat_Contrast>
         <name>Contrast</name>
-        <value>0.420000</value>
+        <value>0.570000</value>
     </SliderFloat_Contrast>
     <SliderInt_Change_Threshold>
         <name>Change Threshold</name>

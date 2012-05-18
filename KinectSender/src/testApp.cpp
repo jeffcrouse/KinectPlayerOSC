@@ -5,8 +5,8 @@ void testApp::setup() {
 
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(false);
-	ofSetFrameRate(60);
 
+	ofSetFrameRate(60);
 	cout << "SCREEN_WIDTH: " << SCREEN_WIDTH  << endl;
 	cout << "SCREEN_HEIGHT: " << SCREEN_HEIGHT  << endl;
 	cout << "CELL_SIZE: " << CELL_SIZE  << endl;
@@ -21,7 +21,7 @@ void testApp::setup() {
 	char szPath[128] = "";
     gethostname(szPath, sizeof(szPath));
 	string hostname = string(szPath);
-	string destination="192.168.1.106";
+	string destination="169.254.249.190";
 	int port = 12345;
 	cout <<  hostname << " --> " << destination << ":" << port << endl;
 
@@ -40,7 +40,7 @@ void testApp::setup() {
 	bool useTexture = true;
 	NUI_IMAGE_RESOLUTION videoResolution = NUI_IMAGE_RESOLUTION_640x480;
 	NUI_IMAGE_RESOLUTION depthResolution = NUI_IMAGE_RESOLUTION_320x240;
-	bool nearmode = false;
+	bool nearmode = true;
 
 	kinect.init(grabVideo, grabDepth, grabAudio, grabLabel, grabSkeleton, grabCalibratedVideo, grabLabelCv, useTexture, videoResolution, depthResolution);
 	kinect.open(nearmode);
@@ -154,8 +154,8 @@ void testApp::update() {
 	}
 
 	// Update the kinect values
-	if(kinectAngle != kinect.getCurrentAngle()) 
-		kinect.setAngle( kinectAngle );
+	//if(kinectAngle != kinect.getCurrentAngle()) 
+		//kinect.setAngle( kinectAngle );
 	
 	if(nearClipping != kinect.getNearClippingDistance()) 
 		kinect.setNearClippingDistance( nearClipping );
