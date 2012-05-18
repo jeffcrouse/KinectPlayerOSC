@@ -500,4 +500,7 @@
       <Filter>addons\ofxOSC\libs</Filter>
     </Library>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\osc_settings.xml" />
+  </ItemGroup>
 </Project>

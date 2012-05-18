@@ -19,7 +19,7 @@ void testApp::setup() {
 	//
 	// Get the OSC port and destination from the settings file
 	//
-	if(!oscSettings.loadFile("mySettings.xml")) {
+	if(!oscSettings.loadFile("osc_settings.xml")) {
 		ofLog(OF_LOG_ERROR, "Couldn't load settings file!");
 	}
 	oscSettings.pushTag("osc");
@@ -30,7 +30,6 @@ void testApp::setup() {
 	//
 	// Set up sender
 	//
-	cout <<  hostname << " --> " << destination << ":" << port << endl;
 	sender.setup(destination, port);
 	
 	
@@ -50,8 +49,9 @@ void testApp::setup() {
 			messageAddress = oscSettings.getValue("msgAddress", "p1");
 		oscSettings.popTag();
 	}
-	cout << "OSC message address: " << messageAddress << endl;
-	
+
+
+	cout <<  hostname << " --> " << destination << ":" << port << " (" << messageAddress << ")" << endl;
 
 
 
