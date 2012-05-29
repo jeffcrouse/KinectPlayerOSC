@@ -48,10 +48,10 @@ class testApp : public ofBaseApp {
 		ofxXmlSettings oscSettings;
 		ofxKinectNui kinect;
 		int cells[NUM_CELLS];
+		int updates[NUM_CELLS];
 		ofFbo render;
 		string messageAddress;
 		stringstream message;
-		
 
 		ofxOscSender sender;
 
@@ -68,7 +68,11 @@ class testApp : public ofBaseApp {
 		int changeThreshold; 
 		int leftCrop, rightCrop;
 		float lastSend;
+		int erode, dilate, blur;
 
+		ofImage labelImageRGBA;
+		ofxCvColorImage labelImageRGB;
+		ofxCvGrayscaleImage labelImageGray;
 		ofxCvColorImage colorFrame;
 		ofxCvGrayscaleImage grayFrame;
 		ofPixels grayPixels;

@@ -13,11 +13,11 @@
     </SliderFloat_Far_Clipping>
     <SliderFloat_Brightness>
         <name>Brightness</name>
-        <value>1.000000</value>
+        <value>0.240000</value>
     </SliderFloat_Brightness>
     <SliderFloat_Contrast>
         <name>Contrast</name>
-        <value>0.570000</value>
+        <value>0.210000</value>
     </SliderFloat_Contrast>
     <SliderInt_Change_Threshold>
         <name>Change Threshold</name>
@@ -31,4 +31,16 @@
         <name>Left Crop</name>
         <value>36</value>
     </SliderInt_Left_Crop>
+    <SliderInt_Erode>
+        <name>Erode</name>
+        <value>4</value>
+    </SliderInt_Erode>
+    <SliderInt_Dilate>
+        <name>Dilate</name>
+        <value>3</value>
+    </SliderInt_Dilate>
+    <SliderInt_Blur>
+        <name>Blur</name>
+        <value>7</value>
+    </SliderInt_Blur>
 </controls>

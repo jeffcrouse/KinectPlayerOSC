@@ -1,5 +1,17 @@
 #include "testApp.h"
 
+const UINT playerColors[ofxKinectNui::KINECT_PLAYERS_INDEX_NUM] = {
+	0x00FFFFFF,	/// no user
+	0xFF0000FF,
+	0xFF00FF00,
+	0xFFFF0000,
+	0xFF00FFFF,
+	0xFFFF00FF,
+	0xFFFFFF00,
+	0xFF6600FF
+};
+
+
 //--------------------------------------------------------------
 void testApp::setup() {
 
@@ -87,16 +99,20 @@ void testApp::setup() {
 	colorFrame.allocate(320, 240);
 	grayFrame.allocate(320, 240);
 	grayFrame.setUseTexture(true);
+	labelImageRGBA.allocate(320, 240, OF_IMAGE_COLOR_ALPHA);
+	labelImageRGB.allocate(320, 240);
+	labelImageGray.allocate(320, 240);
 	render.allocate(GRID_WIDTH, GRID_HEIGHT);
 
 	//
 	// Initialize the cells
 	//
-	for(int i=0; i<NUM_CELLS; i++)
+	for(int i=0; i<NUM_CELLS; i++) 
+	{
 		cells[i] = 0;
-
+		updates[i] = 0;
+	}
 	
-
 
 	//
 	// Set up GUI
@@ -108,14 +124,18 @@ void testApp::setup() {
 	gui.addSlider("Brightness", brightness, -1, 1);
 	gui.addSlider("Contrast", contrast, -1, 1);
 	gui.addSlider("Change Threshold", changeThreshold, 1, 20); // pixels under this threshold aren't considered "changed"
-	//gui.addSlider("Min Cells Change", minCellsChangedToSend, 1, 40); // don't send messages with less than x changed cells
 	gui.addSlider("Right Crop", rightCrop, 0, 100);
 	gui.addSlider("Left Crop", leftCrop, 0, 100);
 	
+	gui.addSlider("Erode", erode, 0, 10);
+	gui.addSlider("Dilate", dilate, 0, 10);
+	gui.addSlider("Blur", blur, 0, 10);
+
 	gui.addTitle("Previews").setNewColumn(true);
 	gui.addContent("Video", kinect.getVideoTextureReference(), 320);
-	gui.addContent("Gray", grayFrame, 320);
-	gui.addContent("Render", render, SCREEN_WIDTH).setNewColumn(true);
+	gui.addContent("Mask", labelImageGray, 320);
+	gui.addContent("Gray", grayFrame, 320).setNewColumn(true);
+	gui.addContent("Render", render, SCREEN_WIDTH);
 
 	gui.loadFromXML();
 	gui.show();
@@ -128,6 +148,24 @@ void testApp::update() {
 
 	if(kinect.isFrameNew())
 	{
+		int now = ofGetElapsedTimeMillis();
+
+		labelImageRGBA.setFromPixels( kinect.getLabelPixels() );
+		labelImageRGBA.setImageType( OF_IMAGE_COLOR );
+		labelImageRGB.setFromPixels( labelImageRGBA.getPixels(), 320, 240 );
+		labelImageGray = labelImageRGB;
+
+		if(blur>0)
+			labelImageGray.blurGaussian(blur);
+
+		labelImageGray.threshold(80);
+
+		for(int i=0; i<erode; i++)
+			labelImageGray.erode();
+
+		for(int i=0; i<dilate; i++)
+			labelImageGray.dilate();
+
 		colorFrame.setFromPixels( kinect.getCalibratedVideoPixels() );
 		grayFrame = colorFrame;
 		grayFrame.brightnessContrast(brightness, contrast);
@@ -148,12 +186,12 @@ void testApp::update() {
 
 				// Get depth and alpha values (for testing whether we want this pixel)
 				int depth =  kinect.getDistanceAt(samplePos);
-				int a =  kinect.getLabelPixels().getColor(samplePos.x, samplePos.y).a;
-
+				//int a =  kinect.getLabelPixels().getColor(samplePos.x, samplePos.y).a;
+				int a = labelImageGray.getPixelsRef().getColor(samplePos.x, samplePos.y).r;
 
 				// Determine the brightness for cells[i]
 				int bri;
-				if(a == 0) {
+				if(a == 255) {
 					bri = 0;
 				} else {
 					int gray_x = ofClamp(samplePos.x+videoOffset.x, 0, grayPixels.getWidth());
@@ -163,11 +201,12 @@ void testApp::update() {
 			
 				// If it passes the tests, draw/send it
 				int diff = abs(bri - cells[i]);
-				if(diff > changeThreshold)
+				if(diff > changeThreshold) // || now-updates[i] > 2000)
 				{
 					int packed = (i << 8) | bri;			
 					message  << packed << ",";
 					cells[i] = bri;
+					updates[i] = now;
 				}
 				
 				if(message.str().length() > 800) {
@@ -225,6 +264,13 @@ void testApp::draw() {
 		ofRect(x, y, 1, 1);
 	}
 	render.end();
+
+	// Draw player colors for reference
+	for(int i=0; i<ofxKinectNui::KINECT_PLAYERS_INDEX_NUM; i++)
+	{
+		ofSetHexColor(playerColors[i]);
+		ofRect(i*20, 0, 20, 20);
+	}
 
 	gui.draw();
 }

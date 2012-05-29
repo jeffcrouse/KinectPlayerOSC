@@ -1,5 +1,5 @@
 <osc>
-	<destination>169.254.249.190</destination>
+	<destination>169.254.0.2</destination>
 	<port>12345</port>
 	<sender>
 		<hostname>HushGame1-HP</hostname>
